@@ -1,0 +1,14 @@
+[Unit]
+Description=CCU2 container
+Requires=docker.service
+After=docker.service
+#Requires=rfd.service
+#After=rfd.service
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/docker start -a ccu2
+ExecStop=/usr/bin/docker stop -t 2 ccu2
+
+[Install]
+WantedBy=default.target
