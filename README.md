@@ -10,12 +10,17 @@ This script will download the CCU2 firmware for the Homematic, re-package it as 
 * no programs using ports 80 and 2001
 
 ##How to install
-1. git clone this repository in your raspberrian
-2. (Optional) Edit the default settings in _build.sh_
-2. execute _build.sh_
-3. (optional) Delete the cloned repo: the docker image and its data are stored in _/var/docker_
+1. ssh into your raspberry
+2. 'sudo -i'
+3. git clone this repository in your raspberrian
+4. (Optional) Edit the default settings in _build.sh_
+5. execute _build.sh_
+6. (optional) Delete the cloned repo: the docker image and its data are stored in _/var/docker_
 
 After the above steps you can connect to <IP address of your raspberry>. The CCU2 docker image will be started automatically on every boot of the raspberry. For this a service called `ccu2` is added (only works with systemd)
+
+##How to update no a new CCU2 firmware
+Just update the CCU2_VERSION field in _build.sh_ and execute it again. Your CCU2 settings will be preserved.
 
 ##How to configure local antena
 If you have added a [homematic radio module](http://www.elv.de/homematic-funkmodul-fuer-raspberry-pi-bausatz.html) to your raspberry, then you can use it with your CCU2 docker image.
@@ -39,3 +44,20 @@ ResetFile = /sys/class/gpio/gpio18/value
   * NOTE: If you had added other Interfaces make sure that you update their index. If you have `Interface 0` twice then none will be used.
 5. _service ccu2 restart_
 
+## How to import settings from an existing CCU2
+1. Enable ssh in your CCU2. Instructions (in German) [here](https://www.homematic-inside.de/tecbase/homematic/generell/item/zugriff-auf-das-dateisystem-der-ccu-2)
+2. ssh into your rapberry
+3. `sudo -i`
+4. `service ccu2 stop`
+5. `rsync -av <your CCU2 IP>/usr/local/*  /var/lib/docker/volumes/ccu2_data/_data/`
+6. Edit _rfd.conf_. This is at _/var/lib/docker/volumes/ccu2_data/_data/etc/config/rfd.conf_. You also have a symlink in _<git checkout>/rfd.conf_
+7. Replace the _Interface 0_ section with this:
+   ```
+[Interface 0]
+Type = CCU2
+Description = CCU2-Coprocessor
+ComPortFile = /dev/ttyAMA0
+AccessFile = /dev/null
+ResetFile = /sys/class/gpio/gpio18/value
+   ```
+8. `service ccu2 start`
