@@ -98,7 +98,7 @@ echo "Start Docker container"
 cd ${CWD}
 #Remove container if already exits, then start it
 docker ps -a |grep -v $DOCKER_ID && docker rm -f $DOCKER_ID
-docker run --name $DOCKER_ID --net=host -tid -p 80:80 -p 2001:2001 --device=/dev/ttyAMA0 -v /sys/devices:/sys/devices -v ${DOCKER_CCU2_DATA}:/usr/local ccu2
+docker run --name $DOCKER_ID --net=host -tid -p 80:80 -p 2001:2001 --device=/dev/ttyAMA0 -v /sys/devices:/sys/devices -v /sys/class/gpio:/sys/class/gpio -v ${DOCKER_CCU2_DATA}:/usr/local ccu2
 
 echo
 echo "Start ccu2 service"
