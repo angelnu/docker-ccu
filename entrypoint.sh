@@ -7,7 +7,7 @@ echo out > /sys/class/gpio/gpio18/direction
 
 echo "Starting CCU2 init scripts"
 for i in /etc/init.d/S*; do echo; echo "Starting $i"; $i start; done
-
+killall hss_led #Because it is very verbose when it cannot find the CCU2 leds
 echo "Done starting CCU2 init scripts"
 /bin/sh
 
