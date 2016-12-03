@@ -7,7 +7,7 @@ CCU2_VERSION="2.21.10"
 CCU2_SERIAL="ccu2_docker"
 
 #Docker version to download
-DOCKER_VERSION="1.10.3"
+#DOCKER_VERSION="1.10.3"
 
 #Name of the docker volume where CCU2 data will persist
 DOCKER_CCU2_DATA="ccu2_data"
@@ -22,7 +22,7 @@ DOCKER_CCU2_DATA="ccu2_data"
 CCU2_FW_LINK="http://update.homematic.com/firmware/download?cmd=download&version=${CCU2_VERSION}&serial=${CCU2_SERIAL}&lang=de&product=HM-CCU2"
 
 #URL used to download Docker for Raspi
-DOCKER_DEB_URL="https://downloads.hypriot.com/docker-hypriot_${DOCKER_VERSION}-1_armhf.deb"
+#DOCKER_DEB_URL="https://downloads.hypriot.com/docker-hypriot_${DOCKER_VERSION}-1_armhf.deb"
 
 CWD=$(pwd)
 BUILD_FOLDER=${CWD}/build
@@ -32,6 +32,18 @@ UBI_TGZ=ubi-${CCU2_VERSION}.tgz
 DOCKER_BUILD=docker_build
 DOCKER_ID="ccu2"
 
+
+echo "Checking device"
+if grep -qi Raspberry /proc/device-tree/model; then
+  echo "Detected Raspberry"
+  SERIAL_DEVICE=/dev/ttyAMA0
+elif grep -qi Orange /proc/device-tree/model; then
+  echo "Detected Orange Pi"
+  SERIAL_DEVICE=/dev/ttyS1
+else
+  echo "Do not recognize HW $(cat /proc/device-tree/model) -> Exiting"
+  exit 1
+fi
 
 
 
@@ -76,13 +88,18 @@ else
   tar -czf $UBI_TGZ -C ubi/*/root .
 fi
 
+#echo
+#echo "Download Docker if needed"
+#if docker -v|grep -q ${DOCKER_VERSION}; then
+#  echo "skip"
+#else
+#  wget ${DOCKER_DEB_URL}
+#  dpkg -i docker*.deb
+#fi
 echo
-echo "Download Docker if needed"
-if docker -v|grep -q ${DOCKER_VERSION}; then
-  echo "skip"
-else
-  wget ${DOCKER_DEB_URL}
-  dpkg -i docker*.deb
+echo "Installing Docker if needed"
+if docker -v|grep -qvi version; then
+  apt-get install -y docker.io
 fi
 
 echo
@@ -98,7 +115,7 @@ echo "Start Docker container"
 cd ${CWD}
 #Remove container if already exits, then start it
 docker ps -a |grep -v $DOCKER_ID && docker rm -f $DOCKER_ID
-docker run --name $DOCKER_ID --net=host -tid -p 80:80 -p 2001:2001 --device=/dev/ttyAMA0 -v /sys/devices:/sys/devices -v /sys/class/gpio:/sys/class/gpio -v ${DOCKER_CCU2_DATA}:/usr/local ccu2
+docker run --name $DOCKER_ID --net=host -tid -p 80:80 -p 2001:2001 --device=${SERIAL_DEVICE}:/dev/mmd_bidcos -v /sys/devices:/sys/devices -v /sys/class/gpio:/sys/class/gpio -v ${DOCKER_CCU2_DATA}:/usr/local ccu2
 
 echo
 echo "Start ccu2 service"

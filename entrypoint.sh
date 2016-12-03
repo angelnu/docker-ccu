@@ -1,9 +1,22 @@
 #!/bin/sh
-echo "Configuring GPIO"
-if [ ! -d /sys/class/gpio/gpio18 ] ; then
-  echo 18 > /sys/class/gpio/export
+echo "Checking device"
+if grep -qi Raspberry /proc/device-tree/model; then
+  echo "Detected Raspberry"
+  GPIO_PORT=18
+elif grep -qi Orange /proc/device-tree/model; then
+  echo "Detected Orange Pi"
+  GPIO_PORT=110
+else
+  echo "Do not recognize HW $(cat /proc/device-tree/model) -> Exiting"
+  exit 1
 fi
-echo out > /sys/class/gpio/gpio18/direction
+
+echo "Configuring GPIO in port ${GPIO_PORT}"
+if [ ! -d /sys/class/gpio/gpio${GPIO_PORT} ] ; then
+  echo ${GPIO_PORT} > /sys/class/gpio/export
+fi
+echo out > /sys/class/gpio/gpio${GPIO_PORT}/direction
+ln -sf /sys/class/gpio/gpio${GPIO_PORT}/value /dev/ccu2-ic200
 
 echo
 echo "Check if /etc/config/keys exits"
@@ -35,7 +48,7 @@ for i in /etc/init.d/S*; do echo; echo "Starting $i"; $i start; done
 killall hss_led #Because it is very verbose when it cannot find the CCU2 leds
 echo "Done starting CCU2 init scripts"
 /bin/sh
-
+sleep infinity
 
 
 
