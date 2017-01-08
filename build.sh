@@ -1,17 +1,24 @@
 #!/bin/bash
 
 #CCU2 firmware version to download
-CCU2_VERSION="2.21.10"
+: ${CCU2_VERSION:="2.21.10"}
 
 #CCU2 Serial Number
-CCU2_SERIAL="ccu2_docker"
+: ${CCU2_SERIAL:="ccu2_docker"}
+
+#Rega Port
+value=${1:-the}
+: ${CCU2_REGA_PORT:=80}
+
+#Rfd Port
+: ${CCU2_RFD_PORT:=2001}
+
 
 #Docker version to download
 #DOCKER_VERSION="1.10.3"
 
 #Name of the docker volume where CCU2 data will persist
-DOCKER_CCU2_DATA="ccu2_data"
-
+: ${DOCKER_CCU2_DATA:="ccu2_data"}
 
 
 ##############################################
@@ -115,7 +122,7 @@ echo "Start Docker container"
 cd ${CWD}
 #Remove container if already exits, then start it
 docker ps -a |grep -v $DOCKER_ID && docker rm -f $DOCKER_ID
-docker run --name $DOCKER_ID --net=host -tid -p 80:80 -p 2001:2001 --device=${SERIAL_DEVICE}:/dev/mmd_bidcos -v /sys/devices:/sys/devices -v /sys/class/gpio:/sys/class/gpio -v ${DOCKER_CCU2_DATA}:/usr/local ccu2
+docker run --name $DOCKER_ID --net=host -tid -p ${CCU2_REGA_PORT}:80 -p ${CCU2_RFD_PORT}:2001 --device=${SERIAL_DEVICE}:/dev/mmd_bidcos -v /sys/devices:/sys/devices -v /sys/class/gpio:/sys/class/gpio -v ${DOCKER_CCU2_DATA}:/usr/local ccu2
 
 echo
 echo "Start ccu2 service"
