@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Stop on error
+set -e
+
+
 #CCU2 firmware version to download
 : ${CCU2_VERSION:="2.21.10"}
 
@@ -87,9 +91,10 @@ else
   if [ ! -d ubi_reader ]; then
     git clone https://github.com/jrspruitt/ubi_reader
   fi
-  apt-get install python-lzo
+  python -mplatform | grep -qi Ubuntu && apt-get update &&  apt-get install python-lzo || true
+  python -mplatform | grep -qi ARCH && apt-get update &&  pip2 install python-lzo || true
   rm -rf ubi
-  PYTHONPATH=ubi_reader ubi_reader/scripts/ubireader_extract_files -k $CCU2_UBI -o ubi
+  PYTHONPATH=ubi_reader python2 ubi_reader/scripts/ubireader_extract_files -k $CCU2_UBI -o ubi
 
   echo "Compress the result"
   tar -czf $UBI_TGZ -C ubi/*/root .
