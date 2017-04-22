@@ -53,8 +53,9 @@ You can also deploy this docker image to a docker swarm. For this you need to:
   * Cluster FS such as glusterfs. TBD: upload instructions
 
 execute the build with additional variables:
-'DOCKER_CCU2_DATA=/media/glusterfs/ccu2 DOCKER_ID=127.0.0.1:5000/ccu2 DOCKER_MODE=swap ./build.sh'
+'DOCKER_CCU2_DATA=/media/glusterfs/ccu2 DOCKER_ID=127.0.0.1:5000/ccu2 DOCKER_MODE=swap DOCKER_OPTIONS="--constraint node.labels.architecture==arm" ./build.sh'
 
 * DOCKER_CCU2_DATA should point to a mounted folder that it is shared between the cluster members
 * DOCKER_MODE=swap to deploy to a swarm instead of a singe docker node (default)
 * DOCKER_ID has to point to the local data repository
+* DOCKER_OPTIONS pass additional flags such as constraints so the docker image is only deployed on valid nodes

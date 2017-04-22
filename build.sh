@@ -31,6 +31,8 @@ value=${1:-the}
 #Run with docker swarm?
 : ${DOCKER_MODE:="single"}
 
+#Additional options for docker create service / docker run
+: ${DOCKER_OPTIONS:=""}
 
 ##############################################
 # No need to touch anything bellow this line #
@@ -152,10 +154,11 @@ if [ $DOCKER_MODE = swap ] ; then
   -p ${CCU2_RFD_PORT}:2001 \
   -e PERSISTENT_DIR=${DOCKER_VOLUME_INTERNAL_PATH} \
   -e GPIO_PORT=$GPIO_PORT \
-  --mount type=bind,src=/dev/ttyS1,dst=/dev/mmd_bidcos \
+  --mount type=bind,src=${SERIAL_DEVICE},dst=/dev/mmd_bidcos \
   --mount type=bind,src=/sys/devices,dst=/sys/devices \
   --mount type=bind,src=/sys/class/gpio,dst=/sys/class/gpio \
   --mount type=bind,src=${DOCKER_CCU2_DATA},dst=${DOCKER_VOLUME_INTERNAL_PATH} \
+  $DOCKER_OPTIONS \
   $DOCKER_ID
 else
   docker run --name $DOCKER_NAME \
@@ -168,6 +171,7 @@ else
   -v ${DOCKER_CCU2_DATA}:${DOCKER_VOLUME_INTERNAL_PATH} \
   -e PERSISTENT_DIR=${DOCKER_VOLUME_INTERNAL_PATH} \
   -e GPIO_PORT=$GPIO_PORT \
+  $DOCKER_OPTIONS \
   $DOCKER_ID
 fi
 
