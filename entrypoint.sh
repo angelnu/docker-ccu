@@ -11,6 +11,12 @@ else
   exit 1
 fi
 
+LOCAL_PERSISTENT_DIR=/usr/local/
+if [ ! -z $PERSISTENT_DIR ] ; then
+  echo "Copying from $PERSISTENT_DIR to $LOCAL_PERSISTENT_DIR"
+  rsync -av $PERSISTENT_DIR/* $LOCAL_PERSISTENT_DIR/
+fi
+
 echo "Configuring GPIO in port ${GPIO_PORT}"
 if [ ! -d /sys/class/gpio/gpio${GPIO_PORT} ] ; then
   echo ${GPIO_PORT} > /sys/class/gpio/export
@@ -47,8 +53,26 @@ echo "Starting CCU2 init scripts"
 for i in /etc/init.d/S*; do echo; echo "Starting $i"; $i start; done
 killall hss_led #Because it is very verbose when it cannot find the CCU2 leds
 echo "Done starting CCU2 init scripts"
-/bin/sh
-sleep infinity
+
+echo
+echo "Register trap for SIGTERM"
+finish () {
+  echo "Terminating"
+  if [ ! -z $PERSISTENT_DIR ] ; then
+    echo "Copying from $LOCAL_PERSISTENT_DIR to $PERSISTENT_DIR"
+    rsync -av $LOCAL_PERSISTENT_DIR/* $PERSISTENT_DIR/
+  fi
+  exit 0
+}
+trap finish SIGTERM
+
+while true; do
+  #Regulary copy back to the persistent storage
+  if [ ! -z $PERSISTENT_DIR ] ; then
+    rsync -av $LOCAL_PERSISTENT_DIR/* $PERSISTENT_DIR/
+  fi
+  sleep 600
+done
 
 
 

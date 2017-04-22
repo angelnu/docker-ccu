@@ -42,4 +42,19 @@ If you have added a [homematic radio module](http://www.elv.de/homematic-funkmod
 4. `service ccu2 stop`
 5. `rsync -av <your CCU2 IP>/usr/local/*  /var/lib/docker/volumes/ccu2_data/_data/`
 6. Edit _rfd.conf_. This is at _/var/lib/docker/volumes/ccu2_data/_data/etc/config/rfd.conf_. You also have a symlink in _<git checkout>/rfd.conf_
-8. `service ccu2 start`
+8. `docker stop ccu2 && docker start ccu2`
+
+## Swarm
+You can also deploy this docker image to a docker swarm. For this you need to:
+* set up a docker swarm in multiple Raspberries. They all need to have local antennas at least you connect to a remote antenna
+* have a local repository to upload the image to
+* have a shared folder mounted at the same location in all the members of the cluster. Examples
+  * Mount a NAS folder. This is simple but then the NAS is the single point of failure
+  * Cluster FS such as glusterfs. TBD: upload instructions
+
+execute the build with additional variables:
+'DOCKER_CCU2_DATA=/media/glusterfs/ccu2 DOCKER_ID=127.0.0.1:5000/ccu2 DOCKER_MODE=swap ./build.sh'
+
+* DOCKER_CCU2_DATA should point to a mounted folder that it is shared between the cluster members
+* DOCKER_MODE=swap to deploy to a swarm instead of a singe docker node (default)
+* DOCKER_ID has to point to the local data repository
