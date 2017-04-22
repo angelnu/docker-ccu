@@ -56,9 +56,11 @@ echo "Checking device"
 if grep -qi Raspberry /proc/device-tree/model; then
   echo "Detected Raspberry"
   SERIAL_DEVICE=/dev/ttyAMA0
+  GPIO_PORT=18
 elif grep -qi Orange /proc/device-tree/model; then
   echo "Detected Orange Pi"
   SERIAL_DEVICE=/dev/ttyS1
+  GPIO_PORT=110
 else
   echo "Do not recognize HW $(cat /proc/device-tree/model) -> Exiting"
   exit 1
@@ -129,15 +131,17 @@ mkdir $DOCKER_BUILD
 cp -l ${CWD}/Dockerfile ${CWD}/entrypoint.sh $DOCKER_BUILD
 cp -l $UBI_TGZ $DOCKER_BUILD/ubi.tgz
 docker build -t $DOCKER_ID -t ${DOCKER_ID}:${CCU2_VERSION} $DOCKER_BUILD
-docker push $DOCKER_ID
-docker push ${DOCKER_ID}:${CCU2_VERSION}
+if [[ ${DOCKER_ID} == */* ]]; then
+  docker push $DOCKER_ID
+  docker push ${DOCKER_ID}:${CCU2_VERSION}
+fi
 
 echo
 echo "Stopping  Docker container - $DOCKER_ID"
 cd ${CWD}
 #Remove container if already exits, then start it
-docker service rm $DOCKER_NAME
-docker ps -a |grep -v $DOCKER_ID && docker stop $DOCKER_NAME && docker rm $DOCKER_NAME
+docker service ls |grep -q $DOCKER_NAME && docker service rm $DOCKER_NAME
+docker ps -a |grep -q $DOCKER_NAME && docker stop $DOCKER_NAME && docker rm -f $DOCKER_NAME
 
 echo
 echo "Start Docker container - $DOCKER_ID"
@@ -147,6 +151,7 @@ if [ $DOCKER_MODE = swap ] ; then
   -p ${CCU2_REGA_PORT}:80 \
   -p ${CCU2_RFD_PORT}:2001 \
   -e PERSISTENT_DIR=${DOCKER_VOLUME_INTERNAL_PATH} \
+  -e GPIO_PORT=$GPIO_PORT \
   --mount type=bind,src=/dev/ttyS1,dst=/dev/mmd_bidcos \
   --mount type=bind,src=/sys/devices,dst=/sys/devices \
   --mount type=bind,src=/sys/class/gpio,dst=/sys/class/gpio \
@@ -162,6 +167,7 @@ else
   -v /sys/class/gpio:/sys/class/gpio \
   -v ${DOCKER_CCU2_DATA}:${DOCKER_VOLUME_INTERNAL_PATH} \
   -e PERSISTENT_DIR=${DOCKER_VOLUME_INTERNAL_PATH} \
+  -e GPIO_PORT=$GPIO_PORT \
   $DOCKER_ID
 fi
 

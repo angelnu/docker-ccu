@@ -1,16 +1,4 @@
 #!/bin/sh
-echo "Checking device"
-if grep -qi Raspberry /proc/device-tree/model; then
-  echo "Detected Raspberry"
-  GPIO_PORT=18
-elif grep -qi Orange /proc/device-tree/model; then
-  echo "Detected Orange Pi"
-  GPIO_PORT=110
-else
-  echo "Do not recognize HW $(cat /proc/device-tree/model) -> Exiting"
-  exit 1
-fi
-
 LOCAL_PERSISTENT_DIR=/usr/local/
 if [ ! -z $PERSISTENT_DIR ] ; then
   echo "Copying from $PERSISTENT_DIR to $LOCAL_PERSISTENT_DIR"
