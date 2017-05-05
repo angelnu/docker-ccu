@@ -1,5 +1,6 @@
 FROM scratch
 ADD ubi.tgz /
+ADD /LICENSE /
 
 #Circumvention to avoid that rfd is updated
 RUN sed -i -e 's/^Improved/#Improved/g'      /etc/config_templates/rfd.conf && \

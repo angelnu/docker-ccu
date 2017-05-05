@@ -1,16 +1,31 @@
 #!/bin/sh
 LOCAL_PERSISTENT_DIR=/usr/local/
+echo "Checking device"
+if grep -qi Raspberry /sys_org/firmware/devicetree/base/model; then
+  echo "Detected Raspberry"
+  SERIAL_DEVICE=/dev_org/ttyAMA0
+  GPIO_PORT=18
+elif grep -qi Orange /sys_org/firmware/devicetree/base/model; then
+  echo "Detected Orange Pi"
+  SERIAL_DEVICE=/dev_org/ttyS1
+  GPIO_PORT=110
+else
+  echo "Do not recognize HW $(cat ^/model) -> Exiting"
+  exit 1
+fi
+ln -s ${SERIAL_DEVICE} /dev/mmd_bidcos
+
 if [ ! -z $PERSISTENT_DIR ] ; then
   echo "Copying from $PERSISTENT_DIR to $LOCAL_PERSISTENT_DIR"
   rsync -av $PERSISTENT_DIR/* $LOCAL_PERSISTENT_DIR/
 fi
 
 echo "Configuring GPIO in port ${GPIO_PORT}"
-if [ ! -d /sys/class/gpio/gpio${GPIO_PORT} ] ; then
-  echo ${GPIO_PORT} > /sys/class/gpio/export
+if [ ! -d /sys_org/class/gpio/gpio${GPIO_PORT} ] ; then
+  echo ${GPIO_PORT} > /sys_org/class/gpio/export
 fi
-echo out > /sys/class/gpio/gpio${GPIO_PORT}/direction
-ln -sf /sys/class/gpio/gpio${GPIO_PORT}/value /dev/ccu2-ic200
+echo out > /sys_org/class/gpio/gpio${GPIO_PORT}/direction
+ln -sf /sys_org/class/gpio/gpio${GPIO_PORT}/value /dev/ccu2-ic200
 
 echo
 echo "Check if /etc/config/keys exits"

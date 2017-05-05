@@ -26,7 +26,7 @@ value=${1:-the}
 : ${DOCKER_CCU2_DATA:="ccu2_data"}
 
 #Docker ID is used to push built image to a docker repository (needed for docker swarm)
-: ${DOCKER_ID:="ccu2"}
+: ${DOCKER_ID:="angelnu/ccu2"}
 
 #Run with docker swarm?
 : ${DOCKER_MODE:="single"}
@@ -52,22 +52,6 @@ UBI_TGZ=ubi-${CCU2_VERSION}.tgz
 DOCKER_BUILD=docker_build
 DOCKER_VOLUME_INTERNAL_PATH="/mnt"
 DOCKER_NAME=ccu2
-
-
-echo "Checking device"
-if grep -qi Raspberry /proc/device-tree/model; then
-  echo "Detected Raspberry"
-  SERIAL_DEVICE=/dev/ttyAMA0
-  GPIO_PORT=18
-elif grep -qi Orange /proc/device-tree/model; then
-  echo "Detected Orange Pi"
-  SERIAL_DEVICE=/dev/ttyS1
-  GPIO_PORT=110
-else
-  echo "Do not recognize HW $(cat /proc/device-tree/model) -> Exiting"
-  exit 1
-fi
-
 
 
 ##########
@@ -132,6 +116,7 @@ rm -rf $DOCKER_BUILD
 mkdir $DOCKER_BUILD
 cp -l ${CWD}/Dockerfile ${CWD}/entrypoint.sh $DOCKER_BUILD
 cp -l $UBI_TGZ $DOCKER_BUILD/ubi.tgz
+cp -l ubi_reader/LICENSE $DOCKER_BUILD/LICENSE
 docker build -t $DOCKER_ID -t ${DOCKER_ID}:${CCU2_VERSION} $DOCKER_BUILD
 if [[ ${DOCKER_ID} == */* ]]; then
   docker push $DOCKER_ID
@@ -148,29 +133,30 @@ docker ps -a |grep -q $DOCKER_NAME && docker stop $DOCKER_NAME && docker rm -f $
 echo
 echo "Start Docker container - $DOCKER_ID"
 cd ${CWD}
-if [ $DOCKER_MODE = swap ] ; then
+if [ $DOCKER_MODE = swarm ] ; then
+  echo "as swarm service"
   docker service create --name $DOCKER_NAME \
   -p ${CCU2_REGA_PORT}:80 \
   -p ${CCU2_RFD_PORT}:2001 \
   -e PERSISTENT_DIR=${DOCKER_VOLUME_INTERNAL_PATH} \
-  -e GPIO_PORT=$GPIO_PORT \
-  --mount type=bind,src=${SERIAL_DEVICE},dst=/dev/mmd_bidcos \
-  --mount type=bind,src=/sys/devices,dst=/sys/devices \
-  --mount type=bind,src=/sys/class/gpio,dst=/sys/class/gpio \
+  --mount type=bind,src=/dev,dst=/dev_org \
+  --mount type=bind,src=/sys,dst=/sys_org \
   --mount type=bind,src=${DOCKER_CCU2_DATA},dst=${DOCKER_VOLUME_INTERNAL_PATH} \
+  --hostname $DOCKER_NAME \
+  --network $DOCKER_NAME \
   $DOCKER_OPTIONS \
   $DOCKER_ID
 else
+  echo "as plain docker"
   docker run --name $DOCKER_NAME \
   -d --restart=always \
   -p ${CCU2_REGA_PORT}:80 \
   -p ${CCU2_RFD_PORT}:2001 \
-  --device=${SERIAL_DEVICE}:/dev/mmd_bidcos \
-  -v /sys/devices:/sys/devices \
-  -v /sys/class/gpio:/sys/class/gpio \
-  -v ${DOCKER_CCU2_DATA}:${DOCKER_VOLUME_INTERNAL_PATH} \
   -e PERSISTENT_DIR=${DOCKER_VOLUME_INTERNAL_PATH} \
-  -e GPIO_PORT=$GPIO_PORT \
+  -v /dev:/dev_org \
+  -v /sys:/sys_org \
+  -v ${DOCKER_CCU2_DATA}:${DOCKER_VOLUME_INTERNAL_PATH} \
+  --hostname $DOCKER_NAME \
   $DOCKER_OPTIONS \
   $DOCKER_ID
 fi
