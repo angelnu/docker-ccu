@@ -124,17 +124,21 @@ if [[ ${DOCKER_ID} == */* ]]; then
 fi
 
 echo
-echo "Stopping  Docker container - $DOCKER_ID"
+echo "Stopping docker container - $DOCKER_ID"
 cd ${CWD}
-#Remove container if already exits, then start it
+#Remove container if already exits
+if [ -f /etc/systemd/system/ccu2.service ] ; then
+  #Legacy: before we had a service 
+  service ccu2 stop
+  rm /etc/systemd/system/ccu2.service
+fi
 docker service ls |grep -q $DOCKER_NAME && docker service rm $DOCKER_NAME
 docker ps -a |grep -q $DOCKER_NAME && docker stop $DOCKER_NAME && docker rm -f $DOCKER_NAME
 
 echo
-echo "Start Docker container - $DOCKER_ID"
 cd ${CWD}
 if [ $DOCKER_MODE = swarm ] ; then
-  echo "as swarm service"
+  echo "Starting as swarm service"
   docker service create --name $DOCKER_NAME \
   -p ${CCU2_REGA_PORT}:80 \
   -p ${CCU2_RFD_PORT}:2001 \
@@ -146,8 +150,8 @@ if [ $DOCKER_MODE = swarm ] ; then
   --network $DOCKER_NAME \
   $DOCKER_OPTIONS \
   $DOCKER_ID
-else
-  echo "as plain docker"
+elif [ $DOCKER_MODE = single ] ; then
+  echo "Starting container as plain docker"
   docker run --name $DOCKER_NAME \
   -d --restart=always \
   -p ${CCU2_REGA_PORT}:80 \
@@ -159,11 +163,9 @@ else
   --hostname $DOCKER_NAME \
   $DOCKER_OPTIONS \
   $DOCKER_ID
-fi
-
-if [ -f /etc/systemd/system/ccu2.service ] ; then
-  service ccu2 stop
-  rm /etc/systemd/system/ccu2.service
+else
+  echo "No starting container: DOCKER_MODE = $DOCKER_MODE"
+  exit 0
 fi
 
 echo
