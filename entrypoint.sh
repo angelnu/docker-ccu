@@ -17,6 +17,16 @@ ln -s ${SERIAL_DEVICE} /dev/mmd_bidcos
 
 if [ ! -z $PERSISTENT_DIR ] ; then
   echo "Copying from $PERSISTENT_DIR to $LOCAL_PERSISTENT_DIR"
+  if [ ! -z $CHECK_PERSISTENT_DIR ] ; then
+    echo "Check that $PERSISTENT_DIR is not empty" 
+    if [ "$(ls -A $PERSISTENT_DIR)" ]; then
+      echo "Ok - not empty -> Continue with copy"
+    else
+      echo "Error - empty -> wait for 15 seconds and then terminate container"
+      sleep 15
+      exit 1
+    fi
+  fi
   rsync -av $PERSISTENT_DIR/* $LOCAL_PERSISTENT_DIR/
 fi
 
