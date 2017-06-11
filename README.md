@@ -34,10 +34,6 @@ If you have added a [homematic radio module](http://www.elv.de/homematic-funkmod
 2. (raspberry) Make sure that the serial console is not using the UART
    * Replace `console=ttyAMA0,115200` with `console=tty1` in _/boot/cmdline.txt_
    * More info [here](http://raspberrypihobbyist.blogspot.de/2012/08/raspberry-pi-serial-port.html)
-3.  Edit _rfd.conf_. This is at _/var/lib/docker/volumes/ccu2_data/_data/etc/config/rfd.conf_. You also have a symlink in _\[git checkout\]/rfd.conf_. Specially the following lines are important:
-   * `#Improved Coprocessor Initialization = true` - commented out
-   * ` AccessFile = /dev/null` - notice the blank at the start of the line
-   * ` ResetFile = /dev/ccu2-ic200` - notice the blank at the start of the line
 4. _docker restart ccu2_
 
 ## How to import settings from an existing CCU2
@@ -45,9 +41,14 @@ If you have added a [homematic radio module](http://www.elv.de/homematic-funkmod
 2. ssh into your rapberry
 3. `sudo -i`
 4. `service ccu2 stop`
-5. `rsync -av <your CCU2 IP>/usr/local/*  /var/lib/docker/volumes/ccu2_data/_data/`
-6. Edit _rfd.conf_. This is at _/var/lib/docker/volumes/ccu2_data/_data/etc/config/rfd.conf_. You also have a symlink in _\[git checkout\]/rfd.conf_
-8. `docker restart ccu2`
+5. Copy the old rfd.conf: `cp _/var/lib/docker/volumes/ccu2_data/_data/etc/config/rfd.conf{,org}_
+6. `rsync -av <your CCU2 IP>/usr/local/*  /var/lib/docker/volumes/ccu2_data/_data/`
+7. Diff the orginal rfd.conf with the one you copied from the CCU2: `diff -u _/var/lib/docker/volumes/ccu2_data/_data/etc/config/rfd.conf{,org}_
+8. Make sure you keep the original lines for:
+   * `#Improved Coprocessor Initialization = true` - commented out
+   * ` AccessFile = /dev/null` - notice the blank at the start of the line
+   * ` ResetFile = /dev/ccu2-ic200` - notice the blank at the start of the line
+9. `docker start ccu2`
 
 ## Swarm
 You can also deploy this docker image to a docker swarm. For this you need to:
