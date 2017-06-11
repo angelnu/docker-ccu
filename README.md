@@ -41,9 +41,9 @@ If you have added a [homematic radio module](http://www.elv.de/homematic-funkmod
 2. ssh into your rapberry
 3. `sudo -i`
 4. `service ccu2 stop`
-5. Copy the old rfd.conf: `cp _/var/lib/docker/volumes/ccu2_data/_data/etc/config/rfd.conf{,org}_
-6. `rsync -av <your CCU2 IP>/usr/local/*  /var/lib/docker/volumes/ccu2_data/_data/`
-7. Diff the orginal rfd.conf with the one you copied from the CCU2: `diff -u _/var/lib/docker/volumes/ccu2_data/_data/etc/config/rfd.conf{,org}_
+5. Copy the old rfd.conf: `cp /var/lib/docker/volumes/ccu2_data/_data/etc/config/rfd.conf{,org}`
+6. `rsync -av \[your CCU2 IP\]/usr/local/*  /var/lib/docker/volumes/ccu2_data/_data/`
+7. Diff the orginal rfd.conf with the one you copied from the CCU2: `diff -u /var/lib/docker/volumes/ccu2_data/_data/etc/config/rfd.conf{,org}`
 8. Make sure you keep the original lines for:
    * `#Improved Coprocessor Initialization = true` - commented out
    * ` AccessFile = /dev/null` - notice the blank at the start of the line
