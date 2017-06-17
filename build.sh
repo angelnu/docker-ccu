@@ -5,7 +5,7 @@ set -e
 
 
 #CCU2 firmware version to download
-: ${CCU2_VERSION:="2.21.10"}
+: ${CCU2_VERSION:="2.27.8"}
 
 #CCU2 Serial Number
 : ${CCU2_SERIAL:="ccu2_docker"}
@@ -123,6 +123,14 @@ if [[ ${DOCKER_ID} == */* ]]; then
   docker push ${DOCKER_ID}:${CCU2_VERSION}
 fi
 
+#Install service that corrects permissions
+echo
+echo "Start ccu2 service"
+cp -a enableCCUDevices.sh /usr/local/bin
+cp ccu2.service /etc/systemd/system/ccu2.service
+systemctl enable ccu2
+service ccu2 restart
+
 echo
 echo "Stopping docker container - $DOCKER_ID"
 cd ${CWD}
@@ -160,6 +168,7 @@ elif [ $DOCKER_MODE = single ] ; then
   -v /dev:/dev_org \
   -v /sys:/sys_org \
   -v ${DOCKER_CCU2_DATA}:${DOCKER_VOLUME_INTERNAL_PATH} \
+  --device=/dev/ttyAMA0:/dev_org/ttyAMA0:rwm --device=/dev/ttyS1:/dev_org/ttyS1:rwm \
   --hostname $DOCKER_NAME \
   $DOCKER_OPTIONS \
   $DOCKER_ID

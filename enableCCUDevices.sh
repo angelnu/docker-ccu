@@ -1,12 +1,15 @@
 #!/bin/bash
+
 enableAccess(){
-CID=`docker ps --no-trunc -q --filter ancestor=angelnu/ccu2|head -1`
-if [[ -z $CID ]]; then
-    echo 'CID not found'
-    exit
-fi
-echo "Setting permissions for image $CID"
-echo "c *:* rwm" > /sys/fs/cgroup/devices/docker/$CID/devices.allow
+  CIDS=`docker ps --no-trunc -q --filter name=ccu2|head -1`
+  if [[ -z $CIDS ]]; then
+      echo 'CID not found'
+      return
+  fi
+  for CID in $CIDS; do
+    echo "Setting permissions for image $CID"
+    echo "c *:* rwm" > /sys/fs/cgroup/devices/docker/$CID/devices.allow
+  done
 }
 
 enableAccess
