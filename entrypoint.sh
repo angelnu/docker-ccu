@@ -7,7 +7,7 @@ if grep -qi Raspberry /sys_org/firmware/devicetree/base/model; then
   GPIO_PORT=18
 elif grep -qi Orange /sys_org/firmware/devicetree/base/model; then
   echo "Detected Orange Pi"
-  SERIAL_DEVICE=/dev_org/ttyS1
+  SERIAL_DEVICE=/dev_org/ttyS3
   GPIO_PORT=110
 else
   echo "Do not recognize HW $(cat ^/model) -> Exiting"
