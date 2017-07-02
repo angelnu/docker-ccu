@@ -5,7 +5,7 @@ set -e
 
 
 #CCU2 firmware version to download
-: ${CCU2_VERSION:="2.27.8"}
+: ${CCU2_VERSION:="2.27.11"}
 
 #CCU2 Serial Number
 : ${CCU2_SERIAL:="ccu2_docker"}
