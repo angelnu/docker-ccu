@@ -5,7 +5,7 @@ set -e
 
 
 #CCU2 firmware version to download
-: ${CCU2_VERSION:="2.27.11"}
+: ${CCU2_VERSION:="2.29.23"}
 
 #CCU2 Serial Number
 : ${CCU2_SERIAL:="ccu2_docker"}
@@ -58,6 +58,12 @@ DOCKER_NAME=ccu2
 # SCRIPT #
 ##########
 
+# Make sure only root can run our script
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+
 mkdir -p ${BUILD_FOLDER}
 cd ${BUILD_FOLDER}
 
@@ -89,6 +95,7 @@ else
   fi
   python -mplatform | grep -qi Ubuntu && apt-get update &&  apt-get install python-lzo || true
   python -mplatform | grep -qi ARCH && apt-get update &&  pip2 install python-lzo || true
+  python -mplatform | grep -qi debian && apt-get update &&  apt-get install python-lzo || true
   rm -rf ubi
   PYTHONPATH=ubi_reader python2 ubi_reader/scripts/ubireader_extract_files -k $CCU2_UBI -o ubi
 

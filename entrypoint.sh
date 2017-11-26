@@ -10,10 +10,8 @@ elif grep -qi Orange /sys_org/firmware/devicetree/base/model; then
   SERIAL_DEVICE=/dev_org/ttyS3
   GPIO_PORT=110
 else
-  echo "Do not recognize HW $(cat ^/model) -> Exiting"
-  exit 1
+  echo "Did not recognize HW $(cat ^/model) -> Homematic PCB adapter will not work"
 fi
-ln -s ${SERIAL_DEVICE} /dev/mmd_bidcos
 
 if [ ! -z $PERSISTENT_DIR ] ; then
   echo "Copying from $PERSISTENT_DIR to $LOCAL_PERSISTENT_DIR"
@@ -30,12 +28,18 @@ if [ ! -z $PERSISTENT_DIR ] ; then
   rsync -av $PERSISTENT_DIR/* $LOCAL_PERSISTENT_DIR/
 fi
 
-echo "Configuring GPIO in port ${GPIO_PORT}"
-if [ ! -d /sys_org/class/gpio/gpio${GPIO_PORT} ] ; then
-  echo ${GPIO_PORT} > /sys_org/class/gpio/export
+if [ ! -z $SERIAL_DEVICE ] ; then
+  ln -s ${SERIAL_DEVICE} /dev/mmd_bidcos
 fi
-echo out > /sys_org/class/gpio/gpio${GPIO_PORT}/direction
-ln -sf /sys_org/class/gpio/gpio${GPIO_PORT}/value /dev/ccu2-ic200
+
+if [ ! -z $GPIO_PORT ] ; then
+  echo "Configuring GPIO in port ${GPIO_PORT}"
+  if [ ! -d /sys_org/class/gpio/gpio${GPIO_PORT} ] ; then
+    echo ${GPIO_PORT} > /sys_org/class/gpio/export
+  fi
+  echo out > /sys_org/class/gpio/gpio${GPIO_PORT}/direction
+  ln -sf /sys_org/class/gpio/gpio${GPIO_PORT}/value /dev/ccu2-ic200
+fi
 
 echo
 echo "Check if /etc/config/keys exits"
