@@ -3,40 +3,13 @@
 # Stop on error
 set -e
 
+#Load settings
+test ! -e settings && cp -av settings.template settings
+. ./settings
 
-#CCU2 firmware version to download
-: ${CCU2_VERSION:="2.29.23"}
-
-#CCU2 Serial Number
-: ${CCU2_SERIAL:="ccu2_docker"}
-
-#Rega Port
-value=${1:-the}
-: ${CCU2_REGA_PORT:=80}
-
-#Rfd Port
-: ${CCU2_RFD_PORT:=2001}
-
-
-#Docker version to download
-#DOCKER_VERSION="1.10.3"
-
-#Name of the docker volume where CCU2 data will persist
-#It can be a local location as well such as a mounted NAS folder, cluster fs (glusterfs), etc.
-: ${DOCKER_CCU2_DATA:="ccu2_data"}
-
-#Docker ID is used to push built image to a docker repository (needed for docker swarm)
-: ${DOCKER_ID:="angelnu/ccu2"}
-
-#Run with docker swarm?
-: ${DOCKER_MODE:="single"}
-
-#Additional options for docker create service / docker run
-: ${DOCKER_OPTIONS:=""}
-
-##############################################
-# No need to touch anything bellow this line #
-##############################################
+####################
+# Derived settings #
+####################
 
 #URL used by CCU2 to download firmware
 CCU2_FW_LINK="http://update.homematic.com/firmware/download?cmd=download&version=${CCU2_VERSION}&serial=${CCU2_SERIAL}&lang=de&product=HM-CCU2"
@@ -52,7 +25,6 @@ UBI_TGZ=ubi-${CCU2_VERSION}.tgz
 DOCKER_BUILD=docker_build
 DOCKER_VOLUME_INTERNAL_PATH="/mnt"
 DOCKER_NAME=ccu2
-
 
 ##########
 # SCRIPT #
@@ -130,67 +102,3 @@ if [[ ${DOCKER_ID} == */* ]]; then
   docker push ${DOCKER_ID}:${CCU2_VERSION}
 fi
 
-#Install service that corrects permissions
-echo
-echo "Start ccu2 service"
-cp -a enableCCUDevices.sh /usr/local/bin
-cp ccu2.service /etc/systemd/system/ccu2.service
-systemctl enable ccu2
-service ccu2 restart
-
-echo
-echo "Stopping docker container - $DOCKER_ID"
-cd ${CWD}
-#Remove container if already exits
-if [ -f /etc/systemd/system/ccu2.service ] ; then
-  #Legacy: before we had a service 
-  service ccu2 stop
-  rm /etc/systemd/system/ccu2.service
-fi
-docker service ls |grep -q $DOCKER_NAME && docker service rm $DOCKER_NAME
-docker ps -a |grep -q $DOCKER_NAME && docker stop $DOCKER_NAME && docker rm -f $DOCKER_NAME
-
-echo
-cd ${CWD}
-if [ $DOCKER_MODE = swarm ] ; then
-  echo "Starting as swarm service"
-  docker service create --name $DOCKER_NAME \
-  -p ${CCU2_REGA_PORT}:80 \
-  -p ${CCU2_RFD_PORT}:2001 \
-  -e PERSISTENT_DIR=${DOCKER_VOLUME_INTERNAL_PATH} \
-  --mount type=bind,src=/dev,dst=/dev_org \
-  --mount type=bind,src=/sys,dst=/sys_org \
-  --mount type=bind,src=${DOCKER_CCU2_DATA},dst=${DOCKER_VOLUME_INTERNAL_PATH} \
-  --hostname $DOCKER_NAME \
-  --network $DOCKER_NAME \
-  $DOCKER_OPTIONS \
-  $DOCKER_ID
-elif [ $DOCKER_MODE = single ] ; then
-  echo "Starting container as plain docker"
-  docker run --name $DOCKER_NAME \
-  -d --restart=always \
-  -p ${CCU2_REGA_PORT}:80 \
-  -p ${CCU2_RFD_PORT}:2001 \
-  -e PERSISTENT_DIR=${DOCKER_VOLUME_INTERNAL_PATH} \
-  -v /dev:/dev_org \
-  -v /sys:/sys_org \
-  -v ${DOCKER_CCU2_DATA}:${DOCKER_VOLUME_INTERNAL_PATH} \
-  --device=/dev/ttyAMA0:/dev_org/ttyAMA0:rwm --device=/dev/ttyS1:/dev_org/ttyS1:rwm \
-  --hostname $DOCKER_NAME \
-  $DOCKER_OPTIONS \
-  $DOCKER_ID
-else
-  echo "No starting container: DOCKER_MODE = $DOCKER_MODE"
-  exit 0
-fi
-
-echo
-echo "Docker container started!"
-echo "Docker data volume used: ${DOCKER_CCU2_DATA}"
-if [[ ${DOCKER_CCU2_DATA} == */* ]]; then
-  ln -sf ${DOCKER_CCU2_DATA}/etc/config/rfd.conf .
-else
-  echo "You can find its location with the command 'docker volume inspect ccu2_data'"
-  docker volume inspect ${DOCKER_CCU2_DATA}
-  ln -sf /var/lib/docker/volumes/${DOCKER_CCU2_DATA}/_data/etc/config/rfd.conf .
-fi
