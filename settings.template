@@ -11,6 +11,8 @@ value=${1:-the}
 #Rfd Port
 : ${CCU2_RFD_PORT:=2001}
 
+#TclRegaScript Port
+: ${CCU2_TCLREGASCRIPT_PORT:=8181}
 
 #Docker version to download
 #DOCKER_VERSION="1.10.3"
