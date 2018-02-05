@@ -1,5 +1,5 @@
 #CCU2 firmware version to download
-: ${CCU2_VERSION:="2.29.23"}
+: ${CCU2_VERSION:="2.31.25"}
 
 #CCU2 Serial Number
 : ${CCU2_SERIAL:="ccu2_docker"}
