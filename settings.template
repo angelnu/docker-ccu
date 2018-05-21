@@ -12,7 +12,7 @@
 : ${DOCKER_CCU2_DATA:="ccu2_data"}
 
 #Docker ID is used to push built image to a docker repository (needed for docker swarm)
-: ${DOCKER_ID:="angelnu/ccu2_latest"}
+: ${DOCKER_ID:="angelnu/ccu2:latest"}
 
 #Name of the container/service instance
 : ${DOCKER_NAME:="ccu2"}
