@@ -14,9 +14,9 @@ else
   #Enable some cicumventions for missing antenna
 fi
 
-if [ -n $PERSISTENT_DIR ] ; then
+if [ -n "$PERSISTENT_DIR" ] ; then
   echo "Copying from $PERSISTENT_DIR to $LOCAL_PERSISTENT_DIR"
-  if [ -n $CHECK_PERSISTENT_DIR ] ; then
+  if [ -n "$CHECK_PERSISTENT_DIR" ] ; then
     echo "Check that $PERSISTENT_DIR is not empty"
     if [ "$(ls -A $PERSISTENT_DIR)" ]; then
       echo "Ok - not empty -> Continue with copy"

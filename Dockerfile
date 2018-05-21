@@ -13,7 +13,7 @@ RUN echo "Downloading from $CCU2_FW_LINK " \
     && wget $CCU2_FW_LINK -O -|tar -xz rootfs.ubi
 
 RUN apk update \
-  && apk add gcc lzo lzo-dev musl-dev
+  && apk add gcc lzo lzo-dev musl-dev openssl
 
 #https://github.com/jrspruitt/ubi_reader
 RUN pip install ubi_reader python-lzo
@@ -24,6 +24,9 @@ RUN ubireader_extract_files -k rootfs.ubi -o ubi
 RUN sed -i -e 's/^Improved/#Improved/g'      ubi/*/root/etc/config_templates/rfd.conf && \
     sed -i -e 's/^#AccessFile/ AccessFile/g' ubi/*/root/etc/config_templates/rfd.conf && \
     sed -i -e 's/^#ResetFile/ ResetFile/g'   ubi/*/root/etc/config_templates/rfd.conf
+
+ARG QEMU_TGZ=https://github.com/multiarch/qemu-user-static/releases/download/v2.11.1/qemu-arm-static.tar.gz
+RUN wget $QEMU_TGZ -O - |tar -xz -C ubi/*/root/usr/bin
 
 FROM scratch
 COPY --from=builder ubi/*/root /

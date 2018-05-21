@@ -20,8 +20,7 @@ DOCKER_VOLUME_INTERNAL_PATH="/mnt"
 
 # Make sure only root can run our script
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root" 1>&2
-   exit 1
+   echo "WARNING: This script should be run as root or with permissions for docker" 1>&2
 fi
 
 #Stop existing CCU2 docker
@@ -50,7 +49,7 @@ if [ $DOCKER_MODE = swarm ] ; then
 elif [ $DOCKER_MODE = single ] ; then
   echo "Starting container as plain docker"
 
-  DOCKER_START_OPTS="-d --restart=always -v /sys:/sys_org -v ${DOCKER_CCU2_DATA}:${DOCKER_VOLUME_INTERNAL_PATH} $DOCKER_START_OPTS"
+  DOCKER_START_OPTS="-d --restart=always -v /sys:/sys_org -v /dev:/dev_org -v ${DOCKER_CCU2_DATA}:${DOCKER_VOLUME_INTERNAL_PATH} $DOCKER_START_OPTS"
 
   test -e /dev/ttyAMA0 && DOCKER_START_OPTS="--device=/dev/ttyAMA0:/dev_org/ttyAMA0:rwm $DOCKER_START_OPTS"
   test -e /dev/ttyS1   && DOCKER_START_OPTS="--device=/dev/ttyS1:/dev_org/ttyS1:rwm $DOCKER_START_OPTS"
