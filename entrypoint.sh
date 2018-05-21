@@ -10,13 +10,14 @@ elif grep -qi Orange /sys_org/firmware/devicetree/base/model; then
   SERIAL_DEVICE=/dev_org/ttyS3
   GPIO_PORT=110
 else
-  echo "Did not recognize HW $(cat ^/model) -> Homematic PCB adapter will not work"
+  echo "Did not recognize HW $(cat /sys_org/firmware/devicetree/base/model) -> Homematic PCB adapter will not work"
+  #Enable some cicumventions for missing antenna
 fi
 
-if [ ! -z $PERSISTENT_DIR ] ; then
+if [ -n $PERSISTENT_DIR ] ; then
   echo "Copying from $PERSISTENT_DIR to $LOCAL_PERSISTENT_DIR"
-  if [ ! -z $CHECK_PERSISTENT_DIR ] ; then
-    echo "Check that $PERSISTENT_DIR is not empty" 
+  if [ -n $CHECK_PERSISTENT_DIR ] ; then
+    echo "Check that $PERSISTENT_DIR is not empty"
     if [ "$(ls -A $PERSISTENT_DIR)" ]; then
       echo "Ok - not empty -> Continue with copy"
     else
@@ -77,7 +78,7 @@ finish () {
   echo "Terminating"
   if [ ! -z $PERSISTENT_DIR ] ; then
     echo "Copying from $LOCAL_PERSISTENT_DIR to $PERSISTENT_DIR"
-    rsync -av $LOCAL_PERSISTENT_DIR/* $PERSISTENT_DIR/
+    rsync -av --delete $LOCAL_PERSISTENT_DIR/* $PERSISTENT_DIR/
   fi
   exit 0
 }
@@ -86,7 +87,7 @@ trap finish SIGTERM
 while true; do
   #Regulary copy back to the persistent storage
   if [ ! -z $PERSISTENT_DIR ] ; then
-    rsync -av $LOCAL_PERSISTENT_DIR/* $PERSISTENT_DIR/
+    rsync -av --delete $LOCAL_PERSISTENT_DIR/* $PERSISTENT_DIR/
   fi
   sleep 600
 done
