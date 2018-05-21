@@ -25,10 +25,8 @@ RUN sed -i -e 's/^Improved/#Improved/g'      ubi/*/root/etc/config_templates/rfd
     sed -i -e 's/^#AccessFile/ AccessFile/g' ubi/*/root/etc/config_templates/rfd.conf && \
     sed -i -e 's/^#ResetFile/ ResetFile/g'   ubi/*/root/etc/config_templates/rfd.conf
 
-
-
 FROM scratch
-COPY --from=builder ubi/*/root/* /
+COPY --from=builder ubi/*/root /
 COPY LICENSE entrypoint.sh /
 
 CMD ["/entrypoint.sh"]

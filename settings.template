@@ -1,11 +1,4 @@
-#CCU2 firmware version to download
-: ${CCU2_VERSION:="2.31.25"}
-
-#CCU2 Serial Number
-: ${CCU2_SERIAL:="ccu2_docker"}
-
 #Rega Port
-value=${1:-the}
 : ${CCU2_REGA_PORT:=80}
 
 #Rfd Port
@@ -14,15 +7,12 @@ value=${1:-the}
 #TclRegaScript Port
 : ${CCU2_TCLREGASCRIPT_PORT:=8181}
 
-#Docker version to download
-#DOCKER_VERSION="1.10.3"
-
 #Name of the docker volume where CCU2 data will persist
 #It can be a local location as well such as a mounted NAS folder, cluster fs (glusterfs), etc.
 : ${DOCKER_CCU2_DATA:="ccu2_data"}
 
 #Docker ID is used to push built image to a docker repository (needed for docker swarm)
-: ${DOCKER_ID:="angelnu/ccu2"}
+: ${DOCKER_ID:="angelnu/ccu2_latest"}
 
 #Name of the container/service instance
 : ${DOCKER_NAME:="ccu2"}
