@@ -1,7 +1,7 @@
-FROM python:alpine as builder
+FROM python as builder
 
 #CCU2 firmware version to download
-ARG CCU2_VERSION="2.31.25"
+ARG CCU2_VERSION="2.35.16"
 
 #CCU2 Serial Number
 ARG CCU2_SERIAL="ccu2_docker"
@@ -12,8 +12,8 @@ ARG CCU2_FW_LINK="http://update.homematic.com/firmware/download?cmd=download&ver
 RUN echo "Downloading from $CCU2_FW_LINK " \
     && wget $CCU2_FW_LINK -O -|tar -xz rootfs.ubi
 
-RUN apk update \
-  && apk add gcc lzo lzo-dev musl-dev openssl
+RUN apt update \
+  && apt install -y gcc liblzo2-dev openssl
 
 #https://github.com/jrspruitt/ubi_reader
 RUN pip install ubi_reader python-lzo
