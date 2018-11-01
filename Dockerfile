@@ -27,7 +27,7 @@ RUN sed -i -e 's/^Improved/#Improved/g'      ubi/*/root/etc/config_templates/rfd
     #Reduce the timeout to wait for HMIPServer
     sed -i -e 's/600/5/g'   ubi/*/root/etc/init.d/S62HMServer
 
-ARG QEMU_TGZ=https://github.com/multiarch/qemu-user-static/releases/download/v2.11.1/qemu-arm-static.tar.gz
+ARG QEMU_TGZ=https://github.com/multiarch/qemu-user-static/releases/download/v3.0.0/qemu-arm-static.tar.gz
 RUN wget $QEMU_TGZ -O - |tar -xz -C ubi/*/root/usr/bin
 
 FROM scratch
