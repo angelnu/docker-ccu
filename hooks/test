@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ./test.sh $*
+exec ./deploy.sh $*
