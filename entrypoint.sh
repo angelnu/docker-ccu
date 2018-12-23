@@ -11,7 +11,7 @@ elif grep -qi Orange /sys_org/firmware/devicetree/base/model; then
   GPIO_PORT=110
 else
   echo "Did not recognize HW $(cat /sys_org/firmware/devicetree/base/model) -> Homematic PCB adapter will not work"
-  #Enable some cicumventions for missing antenna
+  #Enable some circumventions for missing antenna
 fi
 
 if [ -n "$PERSISTENT_DIR" ] ; then

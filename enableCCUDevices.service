@@ -1,5 +1,5 @@
 [Unit]
-Description=Permissions for CCU2 container
+Description=Permissions for CCU container
 Requires=docker.service
 After=docker.service
 
