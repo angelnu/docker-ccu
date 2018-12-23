@@ -1,2 +1,3 @@
 #!/bin/sh
+unset DOCKER_TAG #Use the value in settings
 exec ./build.sh $*

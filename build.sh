@@ -12,5 +12,5 @@ fi
 ##########
 
 
-docker build -t ${DOCKER_ID}:${CCU_VERSION} --build-arg CCU_VERSION=${CCU_VERSION} .
-docker tag ${DOCKER_ID}:${CCU_VERSION} ${DOCKER_ID}:${DOCKER_TAG}
+docker build -t ${DOCKER_REPO}:${CCU_VERSION} --build-arg CCU_VERSION=${CCU_VERSION} .
+docker tag ${DOCKER_REPO}:${CCU_VERSION} ${DOCKER_REPO}:${DOCKER_TAG}
