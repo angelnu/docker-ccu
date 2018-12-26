@@ -5,7 +5,7 @@ This project downloads the Homematic CCU2 firmware and re-package it as docker i
 
 An automated build pushes new docker images to [Docker Hub](https://hub.docker.com/r/angelnu/ccu/). You can check there the available versions.
 
-Support for CCU2 has been removed from the HEAD. Please checkout the ccu2 branch if you need to build the CCU2 images. There is also another Docker Hub repository with [old CCU2](https://hub.docker.com/r/angelnu/ccu2/) images.
+Support for CCU2 has been removed from the HEAD. Please checkout the [ccu2 branch](https://github.com/angelnu/docker-ccu2/tree/ccu2) if you need to build the CCU2 images. There is also another Docker Hub repository with [old CCU2](https://hub.docker.com/r/angelnu/ccu2/) images.
 
 ## How to deploy
 
