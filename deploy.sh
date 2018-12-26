@@ -52,7 +52,7 @@ if which dpkg>/dev/null && ! modinfo eq3_char_loop >/dev/null 2>&1 ; then
     apt install -y pivccu-devicetree-armbian
   else
     echo "Uknown platform - trying generic way to install kernel headers"
-    apt install -y linux-headers
+    apt install -y linux-headers-$(uname -r)
   fi
 
   #Install UART drivers
