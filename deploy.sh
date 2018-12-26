@@ -56,7 +56,13 @@ if which dpkg>/dev/null && ! modinfo eq3_char_loop >/dev/null 2>&1 ; then
   fi
 
   #Install UART drivers
-  apt install -y pivccu-modules-dkms
+  if grep -i arm /proc/cpuinfo>/dev/null; then
+    apt install -y pivccu-modules-dkms
+  else
+    #Circumvention until https://github.com/alexreinert/piVCCU/issues/106
+    wget -q -https://www.pivccu.de/piVCCU/pool/main/p/pivccu-modules-dkms/pivccu-modules-dkms-1.0.20.deb
+    dpkg -i pivccu-modules-dkms-*.deb
+  fi
 
   #Load eq3_char_loop module
   modprobe eq3_char_loop
