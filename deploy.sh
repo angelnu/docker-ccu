@@ -40,7 +40,8 @@ if which dpkg>/dev/null && ! modinfo eq3_char_loop >/dev/null 2>&1 ; then
   echo "Installing pivcpu extensions"
 
   #Add repository
-  wget -q -O - https://www.pivccu.de/piVCCU/public.key | sudo apt-key add -
+  apt install -y wget
+  wget -q -O - https://www.pivccu.de/piVCCU/public.key | apt-key add -
   bash -c 'echo "deb https://www.pivccu.de/piVCCU stable main" > /etc/apt/sources.list.d/pivccu.list'
   apt update
 
