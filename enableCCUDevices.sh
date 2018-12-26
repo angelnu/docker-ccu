@@ -1,7 +1,7 @@
 #!/bin/bash
 
 enableAccess(){
-  CIDS=`docker ps --no-trunc -q --filter name=ccu|head -1`
+  CIDS=`docker ps --no-trunc -q --filter name=ccu2|head -1`
   if [[ -z $CIDS ]]; then
       echo 'CID not found'
       return

@@ -1,19 +1,16 @@
 FROM python as builder
 
-#CCU firmware version to download
-ARG CCU_VERSION="2.35.16"
+#CCU2 firmware version to download
+ARG CCU2_VERSION="2.35.16"
 
-#CCU Serial Number
-ARG CCU_SERIAL="ccu_docker"
+#CCU2 Serial Number
+ARG CCU2_SERIAL="ccu2_docker"
 
-#QEMU version (allows running build and CCU on x86)
-ARG QEMU_VERSION="v3.0.0"
+#URL used by CCU2 to download firmware
+ARG CCU2_FW_LINK="http://update.homematic.com/firmware/download?cmd=download&version=${CCU2_VERSION}&serial=${CCU2_SERIAL}&lang=de&product=HM-CCU2"
 
-#URL used by the CCU to download the firmware
-ARG CCU_FW_LINK="http://update.homematic.com/firmware/download?cmd=download&version=${CCU_VERSION}&serial=${CCU_SERIAL}&lang=de&product=HM-CCU2"
-
-RUN echo "Downloading from $CCU_FW_LINK " \
-    && wget $CCU_FW_LINK -O -|tar -xz rootfs.ubi
+RUN echo "Downloading from $CCU2_FW_LINK " \
+    && wget $CCU2_FW_LINK -O -|tar -xz rootfs.ubi
 
 RUN apt update \
   && apt install -y gcc liblzo2-dev openssl
@@ -30,7 +27,7 @@ RUN sed -i -e 's/^Improved/#Improved/g'      ubi/*/root/etc/config_templates/rfd
     #Reduce the timeout to wait for HMIPServer
     sed -i -e 's/600/5/g'   ubi/*/root/etc/init.d/S62HMServer
 
-ARG QEMU_TGZ=https://github.com/multiarch/qemu-user-static/releases/download/${QEMU_VERSION}/qemu-arm-static.tar.gz
+ARG QEMU_TGZ=https://github.com/multiarch/qemu-user-static/releases/download/v3.0.0/qemu-arm-static.tar.gz
 RUN wget $QEMU_TGZ -O - |tar -xz -C ubi/*/root/usr/bin
 
 FROM scratch

@@ -1,17 +1,20 @@
 #Rega Port
-: ${CCU_REGA_PORT:=80}
+: ${CCU2_REGA_PORT:=80}
 
 #Rfd Port
-: ${CCU_RFD_PORT:=2001}
+: ${CCU2_RFD_PORT:=2001}
 
 #TclRegaScript Port
-: ${CCU_TCLREGASCRIPT_PORT:=8181}
+: ${CCU2_TCLREGASCRIPT_PORT:=8181}
 
-#Name of the docker volume where CCU data will persist
+#Name of the docker volume where CCU2 data will persist
 #It can be a local location as well such as a mounted NAS folder, cluster fs (glusterfs), etc.
-: ${DOCKER_CCU_DATA:="ccu_data"}
+: ${DOCKER_CCU2_DATA:="ccu2_data"}
 
 #Docker ID is used to push built image to a docker repository (needed for docker swarm)
+<<<<<<< HEAD
+: ${DOCKER_ID:="angelnu/ccu2:latest"}
+=======
 : ${DOCKER_ID:="angelnu/ccu"}
 
 #CCU version to build
@@ -19,9 +22,10 @@
 
 #Docker TAG for the DOCKER_ID
 : ${DOCKER_TAG:="${CCU_VERSION%%.*}"}
+>>>>>>> parent of 264da13... Use settings tag
 
 #Name of the container/service instance
-: ${DOCKER_NAME:="ccu"}
+: ${DOCKER_NAME:="ccu2"}
 
 #Run with docker swarm?
 : ${DOCKER_MODE:="single"}
