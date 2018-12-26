@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "S02InitRTC - skipping"
+exit 0

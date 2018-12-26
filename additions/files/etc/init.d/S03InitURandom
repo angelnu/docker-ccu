@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "S03InitURandom - skipping"
+exit 0

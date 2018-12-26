@@ -1,0 +1,127 @@
+diff -ruN fw.3.41.7.orig/www/config/cp_maintenance.cgi fw.3.41.7.patched/www/config/cp_maintenance.cgi
+--- fw.3.41.7.orig/www/config/cp_maintenance.cgi	2018-10-30 17:00:21.000000000 +0100
++++ fw.3.41.7.patched/www/config/cp_maintenance.cgi	2018-11-01 16:23:18.857917116 +0100
+@@ -376,109 +376,13 @@
+                 puts "\${dialogSettingsCMLblActualSoftwareVersion}"
+               }
+               table_data {
+-                puts "$cur_version"
+-              }
+-            }
+-            table_row {
+-              table_data {align="left"} {colspan="2"} {
+-                puts "\${dialogSettingsCMLblAvailableSoftwareVersion}"
+-              }
+-              table_data {id="availableSWVersion"} {
+-                # This doesn´t work properly
+-                # puts [iframe "$REMOTE_FIRMWARE_SCRIPT?cmd=check_version&version=$cur_version&serial=$serial&lang=de&product=HM-CCU3" marginheight=0 marginwidth=0 frameborder=0 width=100 height=20 {scrolling="no"} ]
+-                # The available version will be set further down with "jQuery('#availableSWVersion').html(homematic.com.getLatestVersion());"
+-              }
+-            }
+-            table_row {
+-              table_data {align="left"} {colspan="3"} {
+-                #puts "[bold "Software-Update durchführen"]"
+-                puts "<b>\${dialogSettingsCMLblPerformSoftwareUpdate}</b>"
+-              }
+-            }
+-            table_row {
+-              td {width="20"} {}
+-              table_data {align="left"} {
+-                puts "\${dialogSettingsCMLblPerformSoftwareUpdateStep1}"
+-              }
+-              table_data {
+-                division {class="popupControls CLASS20905"} {
+-                  table {
+-                    table_row {
+-                      table_data {
+-                        division {class="CLASS20908" style="display: none"} {id="btnFwDownload"} {} "onClick=\"window.location.href='$REMOTE_FIRMWARE_SCRIPT?cmd=download&version=$cur_version&serial=$serial&lang=de&product=HM-CCU3';\"" {}
+-                        division {class="CLASS20908"}  "onClick=\"showCCULicense();\"" {puts "\${dialogSettingsCMBtnPerformSoftwareUpdateDownload}"}
+-                      }
+-                    }
+-                  }
+-                }
+-              }
+-            }
+-            table_row {
+-              td {width="20"} {}
+-              table_data {align="left"} {colspan="2"} {
+-                puts "\${dialogSettingsCMLblPerformSoftwareUpdateStep2}"
+-              }
+-            }
+-            table_row {
+-              td {width="20"} {}
+-              table_data {colspan="2"} {
+-                form "$env(SCRIPT_NAME)?sid=$sid" name=firmware_form {target=firmware_upload_iframe} enctype=multipart/form-data method=post {
+-                  export action=firmware_upload
+-                  export downloadOnly=$downloadOnly
+-                  file_button firmware_file size=30 maxlength=1000000
+-                }
+-                puts {<iframe name="firmware_upload_iframe" style="display: none;"></iframe>}
+-              }
+-            }
+-            table_row {
+-              td {width="20"} {}
+-              table_data {align="left"} {
+-                puts "\${dialogSettingsCMLblPerformSoftwareUpdateStep3}"
+-              }
+-              table_data {
+-                division {class="popupControls CLASS20905"} {
+-                  table {
+-                    table_row {
+-                      table_data {
+-                        division {class="CLASS20919"} {onClick="document.firmware_form.submit();showUserHint();"} {
+-                          puts "\${dialogSettingsCMBtnPerformSoftwareUpdateUpload}"
+-                        }
+-                      }
+-                    }
+-                  }
+-                }
+-              }
+-            }
+-            table_row {
+-              td {width="20"} {}
+-              table_data {align="left"} {colspan="2"} {class="CLASS20920"} {
+-                puts "\${dialogSettingsCMLblPerformSoftwareUpdateStep4}"
++                puts "$cur_version"
+               }
+             }
+           }
+         }
+-        table_data {align="left"} {class="CLASS20921"} {
+-          puts "\${dialogSettingsCMHintSoftwareUpdate1}"
+-          number_list {class="j_noForcedUpdate"} {
+-            li {
+-              ${dialogSettingsCMHintSoftwareUpdate2}            }
+-            li {
+-               ${dialogSettingsCMHintSoftwareUpdate3}
+-            }
+-            li {
+-               ${dialogSettingsCMHintSoftwareUpdate3a}
+-            }
+-            set bat_level [get_bat_level]
+-            if {$bat_level < 50} {
+-              set msg " \${dialogSettingsCMHintSoftwareUpdate4a} $bat_level%. "
+-              append msg  \${dialogSettingsCMHintSoftwareUpdate4b}
+-              li $msg
+-            }
+-          }
+-
+-          division {class="j_forcedUpdate" style="padding:10px;"} {
+-            puts "<br/>\${dialogSettingsCMHintSoftwareUpdate2}"
+-          }
++	table_data {align="left"} {class="CLASS20904"} {
++          puts "\${dialogSettingspiCCUUpdateHint}"
+         }
+       }
+       table_row {class="CLASS20902 j_noForcedUpdate j_fwUpdateOnly"} {
+@@ -843,10 +747,6 @@
+   cgi_javascript {
+     puts "translatePage('#messagebox');"
+     puts "jQuery('#messagebox').show();"
+-    puts "var latestVersion = translateKey('lblAvailableFirmwareVersionNotKnown');"
+-    puts "latestVersion = homematic.com.getLatestVersion();"
+-    puts "if (latestVersion == undefined || isNaN(parseInt(latestVersion.split('.')\[0\]))) {latestVersion = translateKey('lblAvailableFirmwareVersionNotKnown');}"
+-    puts "jQuery('#availableSWVersion').html(latestVersion);"
+ 
+     # Hide all elements with class j_noForcedUpdate when an update is enforced
+     puts "if (forceUpdate) {"

@@ -1,0 +1,24 @@
+diff -ruN fw.3.41.7.orig/www/webui/js/lang/de/translate.lang.js fw.3.41.7.patched/www/webui/js/lang/de/translate.lang.js
+--- fw.3.41.7.orig/www/webui/js/lang/de/translate.lang.js	2018-10-30 17:00:21.000000000 +0100
++++ fw.3.41.7.patched/www/webui/js/lang/de/translate.lang.js	2018-11-01 15:54:19.014439996 +0100
+@@ -452,7 +452,8 @@
+     "dialogSettingsCMTDCCUShutdown" : "Herunterfahren",
+     "dialogSettingsCMTDCCUSafeMode" : "Abgesicherter<br/>Modus",
+     "dialogSettingsCMTDErrorProtocol" : "Fehler-<br/>protokoll",
+-    "dialogSettingsCMLblActualSoftwareVersion" : "Aktuelle Software-Version:",
++    "dialogSettingsCMLblActualSoftwareVersion" : "Aktuelle Docker CCU-Version:",
++    "dialogSettingspiCCUUpdateHint" : "Nutz bitte diese <a href='https://cloud.docker.com/repository/docker/angelnu/ccu' rel='nofollow'>Einleitung</a>, um dem Docker container zu aktualisieren.",
+     "dialogSettingsCMLblAvailableSoftwareVersion" : "Verf%FCgbare Software-Version:",
+     "dialogSettingsCMLblPerformSoftwareUpdate" : "Software-Update durchf%FChren",
+     "dialogSettingsCMLblPerformSoftwareUpdateStep1" : "Schritt 1: Neue Software herunterladen",
+@@ -478,8 +479,8 @@
+     "dialogSettingsCMHintSoftwareUpdate3" : "F%FChren Sie vor dem Update eine Datensicherung durch.",
+     "dialogSettingsCMHintSoftwareUpdate4a" : "Der Ladezustand der Batterien betr%E4gt nur noch ",
+     "dialogSettingsCMHintSoftwareUpdate4b" : "Um einem Datenverlust durch Ausfall der Stromversorgung vorzubeugen, empfehlen wir, die Batterien vor dem Update zu erneuern.",
+-    "dialogSettingsCMHintRestart" : "Zentrale neu starten. Ver%E4nderte Einstellungen werden vorher gespeichert.",
+-    "dialogSettingsCMHintShutdown" : "Zentrale herunterfahren. Ver%E4nderte Einstellungen werden vorher gespeichert.",
++    "dialogSettingsCMHintRestart" : "CCU Docker Container neu starten. Ver%E4nderte Einstellungen werden vorher gespeichert.",
++    "dialogSettingsCMHintShutdown" : "CCU Docker Container herunterfahren. Ver%E4nderte Einstellungen werden vorher gespeichert.",
+     "dialogSettingsCMHintRestartSafeMode" : "Homematic Zentrale einmalig im abgesicherten Modus starten. Im abgesicherten Modus wird die installierte Zusatzsoftware nicht gestartet. Ver%E4nderte Einstellungen werden vorher gespeichert.",
+     "dialogSettingsCMHintErrorLog" : "Stellen Sie die Anzahl der Logmeldungen ein, die von der Zentrale generiert werden sollen.<br>Sie k%F6nnen zus%E4tzlich einen Rechner angeben, dem die Zentrale ihre Logmeldungen per Syslog schickt. Auf diesem Rechner mu%DF entsprechende Software installiert sein, die die Meldungen entgegennimmt.<br>Zu Diagnosezwecken k%F6nnen die aktuellen Logmeldungen der Zentrale in einer Textdatei heruntergeladen werden.",
+     "dialogSettingsCMLogLevel0" : "Alles loggen",

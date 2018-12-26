@@ -11,7 +11,6 @@ fi
 # SCRIPT #
 ##########
 
-
-docker push ${DOCKER_REPO}:${CCU_VERSION}
-docker push ${DOCKER_REPO}:${MAYOR_CCU_VERSION}
-docker push ${DOCKER_REPO}:latest
+docker pull ${DOCKER_REPO}:${CCU_VERSION}
+docker pull ${DOCKER_REPO}:${MAYOR_CCU_VERSION}
+docker pull ${DOCKER_REPO}:latest

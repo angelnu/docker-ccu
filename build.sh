@@ -11,6 +11,6 @@ fi
 # SCRIPT #
 ##########
 
-
 docker build -t ${DOCKER_REPO}:${CCU_VERSION} --build-arg CCU_VERSION=${CCU_VERSION} .
-docker tag ${DOCKER_REPO}:${CCU_VERSION} ${DOCKER_REPO}:${DOCKER_TAG}
+docker tag ${DOCKER_REPO}:${CCU_VERSION} ${DOCKER_REPO}:${MAYOR_CCU_VERSION}
+docker tag ${DOCKER_REPO}:${CCU_VERSION} ${DOCKER_REPO}:latest

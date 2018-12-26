@@ -1,0 +1,21 @@
+diff -ruN fw.3.41.7.orig/www/config/cp_security.cgi fw.3.41.7.patched/www/config/cp_security.cgi
+--- fw.3.41.7.orig/www/config/cp_security.cgi	2018-10-30 17:00:21.000000000 +0100
++++ fw.3.41.7.patched/www/config/cp_security.cgi	2018-11-01 16:24:34.466416248 +0100
+@@ -296,7 +296,7 @@
+     } else {
+       exec touch /usr/local/.doFactoryReset
+     }
+-    exec kill -SIGQUIT 1
++    exec /sbin/reboot
+   }]} {
+
+     # TWIST-22
+@@ -780,8 +780,6 @@
+   cgi_javascript {puts "MessageBox.close();"}
+
+   if { "false" == $backuperror } {
+-    exec mount -o remount,ro /usr/local
+-    exec mount -o remount,rw /usr/local
+     division {class="popupTitle"} {
+       puts "\${dialogSettingsSecurityMessageSysBackupRestartSystemTitle}"
+     }

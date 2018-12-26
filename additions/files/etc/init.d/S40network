@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "S40network - skipping"
+exit 0
