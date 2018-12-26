@@ -56,6 +56,12 @@ if which dpkg>/dev/null && ! modinfo eq3_char_loop >/dev/null 2>&1 ; then
 
   #Install UART drivers
   apt install -y pivccu-modules-dkms
+
+  #Load eq3_char_loop module
+  modprobe eq3_char_loop
+  echo eq3_char_loop>/etc/modules-load.d/eq3_char_loop.conf
+
+  echo "If you are connecting your Homematic adapter to a GPIO in Armbian you might need to reboot to get /dev/raw-uart"
 fi
 
 #Calculate common options
