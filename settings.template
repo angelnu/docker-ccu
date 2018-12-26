@@ -12,7 +12,7 @@
 : ${DOCKER_CCU_DATA:="ccu_data"}
 
 #Docker ID is used to push built image to a docker repository (needed for docker swarm)
-: ${DOCKER_REPO:="angelnu/ccu"}
+: ${DOCKER_ID:="angelnu/ccu"}
 
 #CCU version to build
 : ${CCU_VERSION:="3.41.11"}
