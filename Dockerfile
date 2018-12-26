@@ -1,7 +1,7 @@
 FROM python as builder
 
 #CCU2 firmware version to download
-ARG CCU2_VERSION="2.35.16"
+ARG CCU2_VERSION="2.41.5"
 
 #CCU2 Serial Number
 ARG CCU2_SERIAL="ccu2_docker"

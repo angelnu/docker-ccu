@@ -12,17 +12,7 @@
 : ${DOCKER_CCU2_DATA:="ccu2_data"}
 
 #Docker ID is used to push built image to a docker repository (needed for docker swarm)
-<<<<<<< HEAD
 : ${DOCKER_ID:="angelnu/ccu2:latest"}
-=======
-: ${DOCKER_ID:="angelnu/ccu"}
-
-#CCU version to build
-: ${CCU_VERSION:="3.41.11"}
-
-#Docker TAG for the DOCKER_ID
-: ${DOCKER_TAG:="${CCU_VERSION%%.*}"}
->>>>>>> parent of 264da13... Use settings tag
 
 #Name of the container/service instance
 : ${DOCKER_NAME:="ccu2"}
