@@ -11,8 +11,11 @@
 #It can be a local location as well such as a mounted NAS folder, cluster fs (glusterfs), etc.
 : ${DOCKER_CCU2_DATA:="ccu2_data"}
 
+#CCU version to build
+: ${CCU_VERSION:="2.41.5"}
+
 #Docker ID is used to push built image to a docker repository (needed for docker swarm)
-: ${DOCKER_ID:="angelnu/ccu2:latest"}
+: ${DOCKER_ID:="angelnu/ccu2"}
 
 #Name of the container/service instance
 : ${DOCKER_NAME:="ccu2"}

@@ -10,6 +10,4 @@ test ! -e settings && cp -av settings.template settings
 
 
 docker build -t $DOCKER_ID .
-if [[ ${DOCKER_ID} == */* ]]; then
-  docker push $DOCKER_ID
-fi
+docker tag $DOCKER_ID ${DOCKER_ID}:${CCU_VERSION}

@@ -13,4 +13,4 @@ fi
 
 
 docker push ${DOCKER_ID}:${CCU_VERSION}
-docker push ${DOCKER_ID}:${DOCKER_TAG}
+docker push ${DOCKER_ID}:latest
