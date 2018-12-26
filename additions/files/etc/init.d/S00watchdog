@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "S00watchdog - skipping"
+exit 0

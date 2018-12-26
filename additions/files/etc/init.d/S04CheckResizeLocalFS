@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "S04CheckResizeLocal - skipping"
+exit 0

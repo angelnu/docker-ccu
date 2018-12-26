@@ -1,0 +1,36 @@
+diff -ruN original/etc/init.d/S62HMServer current/etc/init.d/S62HMServer
+--- original/etc/init.d/S62HMServer
++++ current/etc/init.d/S62HMServer
+@@ -22,6 +22,23 @@
+       cp -a ${CFG_TEMPLATE_DIR}/hmip_networkkey.conf /etc/config
+     fi
+   fi
++
++  # Use /dev/mmd_hmip if exists
++  if [[ -e /dev/mmd_hmip ]]; then
++    SERIAL_HMIP_DEV=/dev/mmd_hmip
++  else
++    . /var/hm_mode
++    SERIAL_HMIP_DEV=$HM_HMIP_DEVNODE
++  fi
++
++  if [[ -n "$SERIAL_HMIP_DEV" ]]; then
++    echo -n "($SERIAL_HMIP_DEV) "
++    JAVA_OPTS="-Dgnu.io.rxtx.SerialPorts=$SERIAL_HMIP_DEV -jar /opt/HMServer/HMIPServer.jar /etc/crRFD.conf /etc/HMServer.conf"
++    sed -i -e "s#Adapter\.1\.Port=.*#Adapter.1.Port=${SERIAL_HMIP_DEV}#g" /etc/crRFD.conf
++  else
++    echo -n "(no HMIP dev) "
++    JAVA_OPTS="-jar /opt/HMServer/HMServer.jar /etc/HMServer.conf"
++  fi
+ }
+
+ waitStartupComplete() {
+@@ -42,7 +59,7 @@
+ start() {
+   echo -n "Starting HMIPServer: "
+   init
+-  start-stop-daemon -b -S -q -m -p ${PIDFILE} --exec java -- -Xmx128m -Dos.arch=arm -Dlog4j.configuration=file:///etc/config/log4j.xml -Dfile.encoding=ISO-8859-1 -Dgnu.io.rxtx.SerialPorts=/dev/mmd_hmip -jar /opt/HMServer/HMIPServer.jar /etc/crRFD.conf /etc/HMServer.conf
++  start-stop-daemon -b -S -q -m -p ${PIDFILE} --exec java -- -Xmx128m -Dos.arch=arm -Dlog4j.configuration=file:///etc/config/log4j.xml -Dfile.encoding=ISO-8859-1 ${JAVA_OPTS}
+   echo -n "."
+   waitStartupComplete
+ }

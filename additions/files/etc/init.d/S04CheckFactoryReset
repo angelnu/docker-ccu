@@ -1,0 +1,53 @@
+#!/bin/sh                                                                             
+#                                                                                     
+# Startup script to check for a factory reset                                         
+#                                                                                     
+                                                                                      
+# function to check if a factory reset (clearing whole /usr/local) should be performed
+# in addition we also resize /usr/local in case it hasn't been resized to SD card
+# boundaries                                    
+check_factory_reset() {                         
+                                                
+  # only continue if .doFactoryReset file exists
+  if [[ ! -r /usr/local/.doFactoryReset ]]; then
+    return 1       
+  fi               
+                   
+  rm -rf /usr/local
+                                        
+  return 0                              
+}                                       
+                                        
+start() {                               
+  echo -n "Checking for Factory Reset: "
+                         
+  check_factory_reset    
+                         
+  if [[ $? -eq 0 ]]; then
+    echo "cleared, OK" 
+  else                 
+    echo "not required"
+  fi       
+}          
+            
+restart() { 
+  start     
+}           
+            
+case "$1" in 
+  start)     
+    start        
+  ;;             
+  stop)          
+    # nothing    
+  ;;                                     
+  restart|reload)                        
+    restart                              
+  ;;                                     
+  *)             
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1                               
+esac                                     
+                                         
+exit $?
+

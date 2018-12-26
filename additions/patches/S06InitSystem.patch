@@ -1,0 +1,31 @@
+diff -ruN original/etc/etc/init.d/S06InitSystem  current/etc/init.d/S06InitSystem
+--- original/etc/etc/init.d/S06InitSystem
++++ current/etc/init.d/S06InitSystem
+@@ -65,9 +65,9 @@
+
+   # if /etc/config/timezone is set to Europe/Berlin we
+   # assume a german keyboard layout
+-  if [[ $(cat /etc/config/timezone) == "Europe/Berlin" ]]; then
+-    /sbin/loadkmap </etc/de.kmap
+-  fi
++  #if [[ $(cat /etc/config/timezone) == "Europe/Berlin" ]]; then
++  #  /sbin/loadkmap </etc/de.kmap
++  #fi
+
+   # if no network config is present we make sure to put a template file
+   # there
+@@ -80,14 +80,6 @@
+   if [[ ! -s /etc/config/shadow ]] ; then
+     cp -a ${CFG_TEMPLATE_DIR}/shadow /etc/config/
+   fi
+-
+-  # load watchdog kernel module
+-  if [[ "${HM_HOST}" != "tinkerboard" ]]; then
+-    modprobe bcm2835_wdt nowayout=1 heartbeat=15
+-  fi
+-
+-  # load tunneling interface support
+-  modprobe tun
+ }
+
+ start() {

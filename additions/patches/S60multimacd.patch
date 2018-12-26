@@ -1,0 +1,16 @@
+diff -ruN original/etc/init.d/S60multimacd current/etc/init.d/S60multimacd
+--- original/etc/init.d/S60multimacd
++++ current/etc/init.d/S60multimacd
+@@ -17,7 +17,11 @@
+   # make sure /dev/eq3loop exists
+   if [[ ! -c /dev/eq3loop ]]; then
+     # load eq3_char_loop kernel module
+-    modprobe eq3_char_loop
++    modprobe eq3_char_loop 2>/dev/null
++    if [ $? != 0 ]; then
++      echo "Skipping"
++      exit 0
++    fi
+   fi
+ }
+

@@ -1,0 +1,43 @@
+diff -ruN original/etc/init.d/S11InitRFHardware current/etc/init.d/S11InitRFHardware 
+--- original/etc/init.d/S11InitRFHardware
++++ current/etc/init.d/S11InitRFHardware
+@@ -16,24 +16,27 @@
+   # until we have a proper tool to identify the
+   # type of the GPIO rf module we assume a RPI-RF-MOD
+   # as soon as we have found a rx8130 RTC clock
+-  if [[ "${HM_RTC}" == "rx8130" ]]; then
+-    HM_HMRF_DEV="RPI-RF-MOD"
+-    HM_HMIP_DEV="RPI-RF-MOD"
++  if [ ! -z ${HM_HOST_GPIO_UART} ]; then
++    if [[ "${HM_RTC}" == "rx8130" ]]; then
++      HM_HMRF_DEV="RPI-RF-MOD"
++      HM_HMIP_DEV="RPI-RF-MOD"
+
+-    # setup the LEDs to show a constant yellow light
+-    echo default-on >/sys/class/leds/rpi_rf_mod\:green/trigger
+-    echo default-on >/sys/class/leds/rpi_rf_mod\:red/trigger
+-    echo none >/sys/class/leds/rpi_rf_mod\:blue/trigger
+-  else
+-    HM_HMRF_DEV="HM-MOD-RPI-PCB"
+-    HM_HMIP_DEV="HM-MOD-RPI-PCB"
++      # setup the LEDs to show a constant yellow light
++      echo default-on >/sys/class/leds/rpi_rf_mod\:green/trigger
++      echo default-on >/sys/class/leds/rpi_rf_mod\:red/trigger
++      echo none >/sys/class/leds/rpi_rf_mod\:blue/trigger
++    else
++      HM_HMRF_DEV="HM-MOD-RPI-PCB"
++      HM_HMIP_DEV="HM-MOD-RPI-PCB"
++    fi
+   fi
+
+   # check if a HmIP-RFUSB (1b1f:c020) USB stick is connected
+   # and set HMIP_DEV and HMIP_DEVNODE accordingly
+   if lsusb | grep -q 1b1f:c020; then
+-    modprobe cp210x
+-    echo 1b1f c020 >/sys/bus/usb-serial/drivers/cp210x/new_id
++    echo "HmIP-RFUSB (1b1f:c020) USB stick is connected -> ensure you do the following on the host:"
++    echo "- modprobe cp210x"
++    echo "- echo 1b1f c020 >/sys/bus/usb-serial/drivers/cp210x/new_id"
+     for i in $(find /sys/bus/usb/devices/usb*/ -name "ttyUSB*" -maxdepth 4); do
+       DEVDIR=$(dirname $i)
+       if [[ -f "${DEVDIR}/uevent" ]]; then
