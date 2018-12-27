@@ -58,15 +58,16 @@ if which dpkg>/dev/null && ! modinfo eq3_char_loop >/dev/null 2>&1 ; then
   #Install UART drivers
   if grep -i arm /proc/cpuinfo>/dev/null; then
     apt install -y pivccu-modules-dkms
+
+    #Load eq3_char_loop module
+    modprobe eq3_char_loop
+    echo eq3_char_loop>/etc/modules-load.d/eq3_char_loop.conf
   else
     #Circumvention until https://github.com/alexreinert/piVCCU/issues/106
     wget -q https://www.pivccu.de/piVCCU/pool/main/p/pivccu-modules-dkms/pivccu-modules-dkms-1.0.20.deb
-    dpkg -i pivccu-modules-dkms-*.deb
+    apt install -y dkms
+    DEBIAN_FRONTEND=noninteractive dpkg -i pivccu-modules-dkms-*.deb
   fi
-
-  #Load eq3_char_loop module
-  modprobe eq3_char_loop
-  echo eq3_char_loop>/etc/modules-load.d/eq3_char_loop.conf
 
   echo "If you are connecting your Homematic adapter to a GPIO in Armbian you might need to reboot to get /dev/raw-uart"
 fi
