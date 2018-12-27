@@ -7,6 +7,9 @@
 #TclRegaScript Port
 : ${CCU_TCLREGASCRIPT_PORT:=8181}
 
+#ssh Port
+: ${CCU_SSH_PORT:=2222}
+
 #Name of the docker volume where CCU data will persist
 #It can be a local location as well such as a mounted NAS folder, cluster fs (glusterfs), etc.
 : ${DOCKER_CCU_DATA:="ccu_data"}

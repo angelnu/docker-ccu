@@ -73,7 +73,7 @@ if which dpkg>/dev/null && ! modinfo eq3_char_loop >/dev/null 2>&1 ; then
 fi
 
 #Calculate common options
-DOCKER_START_OPTS="--detach=true --name $DOCKER_NAME -p ${CCU_REGA_PORT}:80 -p ${CCU_RFD_PORT}:2001 -p ${CCU_TCLREGASCRIPT_PORT}:8181 -e PERSISTENT_DIR=${DOCKER_VOLUME_INTERNAL_PATH} --hostname $DOCKER_NAME $DOCKER_OPTIONS ${DOCKER_REPO}:${DOCKER_TAG}"
+DOCKER_START_OPTS="--detach=true --name $DOCKER_NAME -p ${CCU_REGA_PORT}:80 -p ${CCU_RFD_PORT}:2001 -p ${CCU_SSH_PORT}:22 -p ${CCU_TCLREGASCRIPT_PORT}:8181 -e PERSISTENT_DIR=${DOCKER_VOLUME_INTERNAL_PATH} --hostname $DOCKER_NAME $DOCKER_OPTIONS ${DOCKER_REPO}:${DOCKER_TAG}"
 DOCKER_START_OPTS="--mount type=bind,src=/sys,dst=/sys --mount type=bind,src=/dev,dst=/dev --mount type=volume,src=${DOCKER_CCU_DATA},dst=${DOCKER_VOLUME_INTERNAL_PATH} ${DOCKER_START_OPTS}"
 echo
 if [ $DOCKER_MODE = swarm ] ; then
