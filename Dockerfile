@@ -17,6 +17,9 @@ RUN folders=$(debugfs -R ls rootfs.ext4| sed -e 's/)/)\n/g' | egrep -i "[[:alpha
     && mkdir extracted \
     && for f in $folders; do echo $f; debugfs -R "rdump /$f extracted/" rootfs.ext4; done
 
+#Delete some rests (etc/config/shadow) from /usr/local so ssh works again
+RUN rm -rf extracted/usr/local/*
+
 ARG QEMU_TGZ=https://github.com/multiarch/qemu-user-static/releases/download/${QEMU_VERSION}/qemu-arm-static.tar.gz
 RUN wget --no-verbose $QEMU_TGZ -O - |tar -xz -C extracted/usr/bin
 
