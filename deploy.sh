@@ -36,6 +36,7 @@ if [ -d /etc/udev/rules.d ] && [ ! -e /etc/udev/rules.d/99-Homematic.rules ]; th
   udevadm trigger --attr-match=subsystem=usb
 fi
 
+#This only works on Debian/Ubuntu based OSes such as Armbian and Raspbian
 if which dpkg>/dev/null && ! modinfo eq3_char_loop >/dev/null 2>&1 ; then
   echo "Installing pivcpu extensions"
 
@@ -50,6 +51,9 @@ if which dpkg>/dev/null && ! modinfo eq3_char_loop >/dev/null 2>&1 ; then
     echo "Detected Armbian - install kernel sources and device tree"
     apt install -y `dpkg --get-selections | grep 'linux-image-' | grep '\sinstall' | sed -e 's/linux-image-\([a-z0-9-]\+\).*/linux-headers-\1/'`
     apt install -y pivccu-devicetree-armbian
+  elif grep -q Raspbian /etc/os-release; then
+    echo "Detected Raspbian - install kernel sources and raspberry modules"
+    apt install -y pivccu-modules-raspberrypi
   else
     echo "Uknown platform - trying generic way to install kernel headers"
     apt install -y linux-headers-$(uname -r)
