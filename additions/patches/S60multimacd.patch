@@ -1,16 +1,26 @@
-diff -ruN original/etc/init.d/S60multimacd current/etc/init.d/S60multimacd
 --- original/etc/init.d/S60multimacd
 +++ current/etc/init.d/S60multimacd
-@@ -17,7 +17,11 @@
+@@ -14,10 +14,22 @@
+     . /etc/config/syslog
+   fi
+
++  # source all data from /var/hm_mode
++  [[ -r /var/hm_mode ]] && . /var/hm_mode
++
++  if [ ! -e "$HM_HOST_GPIO_UART" ]; then
++    echo "SKIPPING (missing HM_HOST_GPIO_UART)"
++    exit 0
++  fi
++
    # make sure /dev/eq3loop exists
    if [[ ! -c /dev/eq3loop ]]; then
      # load eq3_char_loop kernel module
 -    modprobe eq3_char_loop
 +    modprobe eq3_char_loop 2>/dev/null
 +    if [ $? != 0 ]; then
-+      echo "Skipping"
++      echo "SKIPPING (missing eq3_char_loop module)"
 +      exit 0
 +    fi
    fi
  }
-
+ 
