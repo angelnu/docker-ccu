@@ -39,7 +39,7 @@ fi
 if [ -d /etc/udev/rules.d ] && [ ! -e /etc/udev/rules.d/99-Homematic.rules ]; then
   cp -av host/99-Homematic.rules /etc/udev/rules.d/
   udevadm control --reload-rules
-  udevadm trigger --attr-match=subsystem=usb
+  udevadm trigger --action=add
 fi
 
 #This only works on Debian/Ubuntu based OSes such as Armbian and Raspbian
