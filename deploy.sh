@@ -54,6 +54,9 @@ if which dpkg>/dev/null && ! modinfo eq3_char_loop >/dev/null 2>&1 ; then
   elif grep -q Raspbian /etc/os-release; then
     echo "Detected Raspbian - install kernel sources and raspberry modules"
     apt install -y pivccu-modules-raspberrypi
+    echo
+    echo "NOTE: please ensure that your GPIO UART is free if you plan to connect your CCU adapter to it"
+    echo "See step 5 and 6 at https://github.com/alexreinert/piVCCU/blob/master/docs/setup/raspberrypi.md"
   else
     echo "Uknown platform - trying generic way to install kernel headers"
     apt install -y linux-headers-$(uname -r)
