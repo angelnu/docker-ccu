@@ -77,6 +77,10 @@ If you have added a [homematic radio module](http://www.elv.de/homematic-funkmod
 
 ## How to import settings from an existing CCU
 
+You can move your settings from an existing CCU into the docker CCU, either via ssh or using the native backup/restore support in the CCU (recommended).
+
+If you use a HM-MOD-RPI-PCB and the Homematic is not working after restoring the backup then likely your old system was running without compatibility with Homematic IP. You need to use the new dual-stack mode. The easiest way to achieve that is to execute the following command: `docker exec ccu sh -c "rm /etc/config/rfd.conf && /etc/init.d/S61rfd restart && cat /etc/config/rfd.conf"`. After this please check that `Improved Coprocessor Initialization = true`.
+
 ### Using the CCU UI (recommend)
 1. log into you HW CCU web ui
 2. go to Settings -> Security -> create backup
