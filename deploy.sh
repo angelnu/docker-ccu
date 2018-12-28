@@ -26,6 +26,12 @@ if [[ $EUID -ne 0 ]]; then
    echo "WARNING: This script should be run as root or with permissions for docker" 1>&2
 fi
 
+# For CCU2 the ccu2 branch must be used
+if [ $MAYOR_CCU_VERSION -le 2 ]; then
+  echo "ERROR: CCU_VERSION must be newer than 2 - please use the 'ccu2' git branch for the CCU2 firmware."
+  exit 1
+fi
+
 #Stop existing CCU docker
 ./undeploy.sh
 

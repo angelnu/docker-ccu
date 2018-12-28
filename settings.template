@@ -22,7 +22,7 @@
 MAYOR_CCU_VERSION=${CCU_VERSION%%.*}
 
 #Docker TAG for the DOCKER_ID - this is the version to download
-#Values <mayor version> or <complete version>: "2" "3" "3.41.11"
+#Values <mayor version> or <complete version>: "3" "3.41.11"
 : ${DOCKER_TAG:="${MAYOR_CCU_VERSION}"}
 
 #Name of the container/service instance
