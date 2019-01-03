@@ -4,6 +4,9 @@
 #Rfd Port
 : ${CCU_RFD_PORT:=2001}
 
+#HM IP Port
+: ${CCU_IP_PORT:=2010}
+
 #TclRegaScript Port
 : ${CCU_TCLREGASCRIPT_PORT:=8181}
 
