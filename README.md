@@ -9,9 +9,9 @@ Support for CCU2 has been removed from the HEAD. Please checkout the [ccu2 branc
 
 ## Features
 - deploy original CCU firmware to Docker and kubernetes
-  - addons, ssh and any other feature from the original CCU not listed under (Not Working section)[#not-working]
+  - addons, ssh and any other feature from the original CCU not listed under [Not Working section](#not-working)
 - Homematic and Homematic IP supported (wired not tested)
-- automatically install support for Homematic HW - thanks to the [Alex´s piVCCU proyect](https://github.com/alexreinert/piVCCU))
+- automatically install support for Homematic HW - thanks to [Alex´s piVCCU proyect](https://github.com/alexreinert/piVCCU)
 - partial multiarch:
   - builds on x86
   - runs on x86 but HMServer does not start
