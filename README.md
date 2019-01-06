@@ -7,15 +7,25 @@ An automated build pushes new docker images to [Docker Hub](https://hub.docker.c
 
 Support for CCU2 has been removed from the HEAD. Please checkout the [ccu2 branch](https://github.com/angelnu/docker-ccu2/tree/ccu2) if you need to build the CCU2 images. There is also another Docker Hub repository with [old CCU2](https://hub.docker.com/r/angelnu/ccu2/) images.
 
-## How to deploy
+## Features
+- deploy original CCU firmware to Docker and kubernetes
+  - addons, ssh and any other feature from the original CCU not listed under (Not Working section)[#not-working]
+- Homematic and Homematic IP supported (wired not tested)
+- automatically install support for Homematic HW - thanks to the [Alex´s piVCCU proyect](https://github.com/alexreinert/piVCCU))
+- partial multiarch:
+  - builds on x86
+  - runs on x86 but HMServer does not start
+- displays Duty Cycle for CCU Gateways - thanks to [Andreas and Jens](https://github.com/jens-maus/RaspberryMatic/issues/219)
+- keep configuration in a remote location specified with the env variable PERSISTENT_DIR - you can use any location supported by rsync
 
- 1. ssh into the target computer (better an ARM device)
- 2. git clone this repository
- 3. (Optional) `cp -a settings.template settings` and edit `settings.template`
- 4. `sudo ./deploy.sh`
-    - you can also use env variables such as `MAYOR_CCU_VERSION=2` to deploy a CCU2 firmware. See [settings.template](settings.template) for all available options
-
-After the above steps you can connect to the <IP address of your computer >:<port 80>. The CCU docker image will be restarted automatically when the computer boots: the container is started in auto-restart mode. With `docker ps ccu` you can see its status.
+## Not working
+- Settings -> Control Panel -> Network Settings
+- Display when there is a new CCU version available
+- true multiarch dynamic docker
+  - current multiarch is based on qemu
+  - will use OCCU as base as done by this other [project](https://github.com/litti/dccu2)
+  - looking at [USB adapter](https://homematic-forum.de/forum/viewtopic.php?f=69&t=47691) for dual stack with a single device
+- automatically build new docker containers when new CCU versions are published by e3q.
 
 ## Dependencies
 
@@ -38,15 +48,18 @@ After the above steps you can connect to the <IP address of your computer >:<por
     - the `deploy.sh` script will try to install the _pivccu_ packages for you. If it does not work please follow [these instructions](https://github.com/alexreinert/piVCCU#manual-installation) to install `pivccu-modules-dkms`, `pivccu-devicetree-armbian` (if you are on Armbian) and `pivccu-modules-raspberrypi` (if you use a Raspberry with Raspbian). You do not need to install a network bridge since docker manages that.
 
 
-## What is left
-- support for Homematic IP with a single device
-  - special kernel modules are needed to duplicate which cannot be loaded into a docker container
-  - using the [HmIP-RFUSB](https://www.elv.de/elv-homematic-ip-rf-usb-stick-hmip-rfusb-fuer-alternative-steuerungsplattformen-arr-bausatz.html) should work but not tested yet.
-  - looking at [USB adapter](https://homematic-forum.de/forum/viewtopic.php?f=69&t=47691)
-- create true multiarch dynamic docker
-  - current multiarch is based on qemu
-  - will use OCCU as base as done by this other [project](https://github.com/litti/dccu2)
-- automatically build new docker containers when new CCU versions are published by e3q.
+## How to deploy
+
+   1. ssh into the target computer (better an ARM device)
+   2. git clone this repository
+   3. (Optional) `cp -a settings.template settings` and edit `settings.template`
+   4. `sudo ./deploy.sh`
+      - you can also use env variables such as `MAYOR_CCU_VERSION=2` to deploy a CCU2 firmware. See [settings.template](settings.template) for all available options
+
+  After the above steps you can connect to the <IP address of your computer >:<port 80>. The CCU docker image will be restarted automatically when the computer boots: the container is started in auto-restart mode. With `docker ps ccu` you can see its status.
+
+
+
 
 ## How to build
 This is only needed if you do not use the already built docker container.
