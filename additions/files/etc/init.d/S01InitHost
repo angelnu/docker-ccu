@@ -54,6 +54,14 @@ HM_LED_YELLOW_MODE1="none"
 HM_LED_YELLOW_MODE2="none"
 
 
+if [ -e /sys/devices/virtual/eq3loop ]; then
+  EQ3LOOP_MAJOR=`cat /sys/devices/virtual/eq3loop/eq3loop/dev | cut -d: -f1`
+  #These are the only ones added at runtime by mutimacd
+  mknod -m 666 /dev/mmd_hmip c $EQ3LOOP_MAJOR 1
+  mknod -m 666 /dev/mmd_bidcos c $EQ3LOOP_MAJOR 2
+fi
+
+
 # save all changed HM_ env variables
 set | grep '^HM_' >>/var/hm_mode
 #Eliminate duplicates
