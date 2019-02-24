@@ -9,7 +9,7 @@ diff -ruN /original/etc/init.d/S11InitRFHardware /current/etc/init.d/S11InitRFHa
 -    HM_HMRF_DEV="RPI-RF-MOD"
 -    HM_HMIP_DEV="RPI-RF-MOD"
 +  if [ ! -z ${HM_HOST_GPIO_UART} ]; then
-+    RF_RPI_MOD_INFO=`/opt/java/bin/java -Dgnu.io.rxtx.SerialPorts=/dev/raw-uart -jar /opt/HmIP/hmip-copro-update.jar -p /dev/raw-uart  -v`
++    RF_RPI_MOD_INFO=`/opt/java/bin/java -Dgnu.io.rxtx.SerialPorts=${HM_HOST_GPIO_UART} -jar /opt/HmIP/hmip-copro-update.jar -p ${HM_HOST_GPIO_UART} -v`
 +    RADIO_MAC=`echo "$RF_RPI_MOD_INFO" | sed -n 's/.*Radio address = \([0-9A-Fa-f]\{6\}\).*/0x\1/p'`
 +    SGTIN=`echo "$RF_RPI_MOD_INFO" | sed -n 's/.*SGTIN = \([0-9A-Fa-f]\{24\}\).*/\1/p'`
 +    if [ ! -z "$RADIO_MAC" ] || [ ! -z "$SGTIN" ] ; then
