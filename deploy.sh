@@ -82,7 +82,7 @@ modprobe eq3_char_loop || true
 echo eq3_char_loop>/etc/modules-load.d/eq3_char_loop.conf || true
 
 echo "Enable realtime"
-echo 'kernel.sched_rt_runtime_us=-1' > /etc/sysctl.d/10-ccu.confecho eq3_char_loop>/etc/modules-load.d/eq3_char_loop.conf || true
+echo 'kernel.sched_rt_runtime_us=-1' > /etc/sysctl.d/10-ccu.conf || true
 sysctl -w kernel.sched_rt_runtime_us=-1 || true
 
 #Calculate common options
