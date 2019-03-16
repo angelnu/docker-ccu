@@ -3,48 +3,35 @@
 echo "S01InitHost - defaults"
 
 : ${HM_MODE:="NORMAL"}
+: ${HM_RTC:=""}
 
 echo "Checking device"
-if grep -qi "BCM2835" /proc/cpuinfo; then
+if [ -e "/dev/raw-uart" ]; then
+  echo "Detected piVCCU kernel module"
+  : ${HM_HOST:="pivvcu"}
+  : ${HM_HOST_GPIO_UART:="/dev/raw-uart"}
+  : ${HM_HOST_GPIO_RESET:=""}
+elif grep -qi "BCM2835" /proc/cpuinfo; then
   echo "Detected Raspberry PI"
   : ${HM_HOST:="Raspberry Pi"}
-  : ${DEVICE_GPIO_UART:="/dev_org/ttyAMA0"}
-  : ${DEVICE_GPIO_RESET:="18"}
-  : ${HM_LED_GREEN:=""}
-  : ${HM_LED_RED:=""}
-  : ${HM_LED_YELLOW:=""}
+  : ${HM_HOST_GPIO_UART:="/dev_org/ttyAMA0"}
+  : ${HM_HOST_GPIO_RESET:="18"}
 elif grep -qi "Allwinner sun8i" /proc/cpuinfo; then /* TBD check value returned by cpuinfo for Orange */
   echo "Detected Orange Pi"
   : ${HM_HOST:="Orange Pi"}
-  : ${DEVICE_GPIO_UART:="/dev_org/ttyS3"}
-  : ${DEVICE_GPIO_RESET:="110"}
-  : ${HM_LED_GREEN:=""}
-  : ${HM_LED_RED:=""}
-  : ${HM_LED_YELLOW:=""}
+  : ${HM_HOST_GPIO_UART:="/dev_org/ttyS3"}
+  : ${HM_HOST_GPIO_RESET:="110"}
 else
-  echo "Did not recognize HW $(grep Hardware /proc/cpuinfo) -> Homematic PCB adapter will not work"
+  echo "PiVCCU kernel module is not installed and did not recognize HW $(grep Hardware /proc/cpuinfo)"
+  echo "-> Homematic PCB adapter will not work!!!"
   : ${HM_HOST:="Unknown"}
-  : ${DEVICE_GPIO_UART:=""}
+  : ${HM_HOST_GPIO_UART:=""}
   : ${HM_HOST_GPIO_RESET:=""}
-  : ${HM_LED_GREEN:=""}
-  : ${HM_LED_RED:=""}
-  : ${HM_LED_YELLOW:=""}
 fi
 
-: ${HM_HOST_GPIO_UART:="/dev/raw-uart"}
-if [ ! -e "${HM_HOST_GPIO_UART}" ]; then
-  echo -n "${HM_HOST_GPIO_UART} does not exists: "
-  if [ -e "${DEVICE_GPIO_UART}" ]; then
-    echo "using ${DEVICE_GPIO_UART}"
-    ln -sf "${DEVICE_GPIO_UART}" "${HM_HOST_GPIO_UART}"
-    HM_HOST_GPIO_UART=$DEVICE_GPIO_UART
-    HM_HOST_GPIO_RESET=$DEVICE_GPIO_RESET
-  else
-    echo "disabling UART"
-    HM_HOST_GPIO_UART=""
-  fi
-fi
-
+: ${HM_LED_GREEN:=""}
+: ${HM_LED_RED:=""}
+: ${HM_LED_YELLOW:=""}
 
 HM_LED_GREEN_MODE1="none"
 HM_LED_GREEN_MODE2="none"

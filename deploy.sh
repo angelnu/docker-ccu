@@ -72,9 +72,6 @@ if which dpkg>/dev/null && ! modinfo eq3_char_loop >/dev/null 2>&1 ; then
   if grep -i arm /proc/cpuinfo>/dev/null; then
     apt install -y pivccu-modules-dkms
 
-    #Load eq3_char_loop module
-    modprobe eq3_char_loop
-    echo eq3_char_loop>/etc/modules-load.d/eq3_char_loop.conf
   else
     #Circumvention until https://github.com/alexreinert/piVCCU/issues/106
     wget -q https://www.pivccu.de/piVCCU/pool/main/p/pivccu-modules-dkms/pivccu-modules-dkms-1.0.20.deb
@@ -84,6 +81,14 @@ if which dpkg>/dev/null && ! modinfo eq3_char_loop >/dev/null 2>&1 ; then
 
   echo "If you are connecting your Homematic adapter to a GPIO in Armbian you might need to reboot to get /dev/raw-uart"
 fi
+
+echo "Load eq3_char_loop module"
+modprobe eq3_char_loop
+echo eq3_char_loop>/etc/modules-load.d/eq3_char_loop.conf
+
+echo "Enable realtime"
+echo 'kernel.sched_rt_runtime_us=-1' > /etc/sysctl.d/10-ccu.conf
+sysctl -w kernel.sched_rt_runtime_us=-1
 
 #Calculate common options
 DOCKER_START_OPTS="--detach=true --name $DOCKER_NAME -p ${CCU_REGA_PORT}:80 -p ${CCU_RFD_PORT}:2001 -p ${CCU_IP_PORT}:2010 -p ${CCU_SSH_PORT}:22 -p ${CCU_TCLREGASCRIPT_PORT}:8181 -e PERSISTENT_DIR=${DOCKER_VOLUME_INTERNAL_PATH} --hostname $DOCKER_NAME $DOCKER_OPTIONS ${DOCKER_REPO}:${DOCKER_TAG}"
