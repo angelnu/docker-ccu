@@ -23,7 +23,9 @@ RUN rm -rf extracted/usr/local/*
 ARG QEMU_TGZ=https://github.com/multiarch/qemu-user-static/releases/download/${QEMU_VERSION}/qemu-arm-static.tar.gz
 RUN wget --no-verbose $QEMU_TGZ -O - |tar -xz -C extracted/usr/bin
 
-RUN git clone --depth 1 --single-branch --branch ${CCU_VERSION} https://github.com/jens-maus/occu.git
+#If the branch is not available we take the latest
+RUN git clone --depth 1 --single-branch --branch ${CCU_VERSION} https://github.com/jens-maus/occu.git \
+    || git clone --depth 1 --single-branch https://github.com/jens-maus/occu.git
 
 RUN \
     # Need firmware for other adapters such as HmIP USB
