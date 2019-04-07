@@ -21,7 +21,7 @@
 : ${DOCKER_REPO:="angelnu/ccu"}
 
 #CCU version to build
-: ${CCU_VERSION:="3.45.5"}
+: ${CCU_VERSION:="3.45.7"}
 MAYOR_CCU_VERSION=${CCU_VERSION%%.*}
 
 #Docker TAG for the DOCKER_ID - this is the version to download
