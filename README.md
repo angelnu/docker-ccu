@@ -70,23 +70,13 @@ This is only needed if you do not use the already built docker container.
 
 ## How to update to a new CCU firmware
 
-1. `./pull.sh `
-2. `./deploy.sh`
+1. `git pull`
+2. `./pull.sh `
+3. `./deploy.sh`
 
 Optionally you can use the _CCU_VERSION_ variable to select a particular version.
 
 Your CCU settings will be preserved.
-
-## How to configure local antenna
-If you have added a [homematic radio module](http://www.elv.de/homematic-funkmodul-fuer-raspberry-pi-bausatz.html) to your raspberry, then you can use it with your CCU2 docker image. If not, you would need to use the external LAN gateway. You can also use a combination of both.
-
-### Instructions
-1. (raspberry 3) You need to avoid that the bluetooth module uses the HW UART. You can either disable it or let it use the miniUART. I use the second option but since I do not use Bluetooth on the Raspi I do not know if this breaks it. More info [here](http://raspberrypi.stackexchange.com/questions/45570/how-do-i-make-serial-work-on-the-raspberry-pi3).
-   * Add `dtoverlay=pi3-miniuart-bt`to _/boot/config.txt_
-2. (raspberry) Make sure that the serial console is not using the UART
-   * Replace `console=ttyAMA0,115200` with `console=tty1` in _/boot/cmdline.txt_
-   * More info [here](http://raspberrypihobbyist.blogspot.de/2012/08/raspberry-pi-serial-port.html)
-4. Run again `./deploy.sh`
 
 ## How to import settings from an existing CCU
 
