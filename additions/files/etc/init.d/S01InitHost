@@ -54,6 +54,3 @@ set | grep '^HM_' >>/var/hm_mode
 #Eliminate duplicates
 . /var/hm_mode
 set | grep '^HM_' >/var/hm_mode
-
-#!/bin/sh
-exit 0

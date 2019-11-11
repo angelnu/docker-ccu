@@ -14,7 +14,7 @@ diff -ruN original/etc/etc/init.d/S06InitSystem  current/etc/init.d/S06InitSyste
 
    # if no network config is present we make sure to put a template file
    # there
-@@ -80,14 +80,6 @@
+@@ -80,14 +80,9 @@
    if [[ ! -s /etc/config/shadow ]] ; then
      cp -a ${CFG_TEMPLATE_DIR}/shadow /etc/config/
    fi
@@ -26,6 +26,9 @@ diff -ruN original/etc/etc/init.d/S06InitSystem  current/etc/init.d/S06InitSyste
 -
 -  # load tunneling interface support
 -  modprobe tun
++  #Linking some config files for compatibility with RaspberryMatic
++  ln -sf /etc/config/hs485d.conf /var/etc/hs485d.conf
++  ln -sf /etc/config/rfd.conf /var/etc/rfd.conf
  }
 
  start() {

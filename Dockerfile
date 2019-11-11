@@ -24,8 +24,7 @@ ARG QEMU_TGZ=https://github.com/multiarch/qemu-user-static/releases/download/${Q
 RUN wget --no-verbose $QEMU_TGZ -O - |tar -xz -C extracted/usr/bin
 
 #If the branch is not available we take the latest
-RUN git clone --depth 1 --single-branch --branch ${CCU_VERSION} https://github.com/jens-maus/occu.git \
-    || git clone --depth 1 --single-branch https://github.com/jens-maus/occu.git
+RUN git clone --depth 1 --single-branch --branch b_$(echo ${CCU_VERSION%.*}|sed 's/\./_/g') https://github.com/jens-maus/occu.git
 
 RUN \
     # Need firmware for other adapters such as HmIP USB
@@ -33,6 +32,17 @@ RUN \
     # Need legacy HMServer for the case no HmIP is plugged
     && mkdir -p extracted/opt/HMServer \
     && cp -avu /occu/HMserver/opt/HMServer/HMServer.jar extracted/opt/HMServer/
+
+RUN git clone --depth 1 --single-branch https://github.com/jens-maus/RaspberryMatic.git
+
+RUN cd RaspberryMatic/buildroot-external/patches/occu/ && \
+    mkdir /RaspberryMatic-occu-patches && \
+    mv 0032-WebUI-Show-Gateway-DC.patch \
+       0038-WebUI-DeviceOverview-StatusColumn.patch \
+       0057-WebUI-ImprovedDutyCycleDisplay.patch \
+       /RaspberryMatic-occu-patches && \
+       cd /extracted/ && \
+       cat /RaspberryMatic-occu-patches/*|patch -p2
 
 # This is in order to generate patches with `diff original/etc current/etc
 RUN ln -s / extracted/current \
