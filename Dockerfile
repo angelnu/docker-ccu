@@ -1,7 +1,7 @@
 FROM python as builder
 
 #CCU firmware version to download
-ARG CCU_VERSION="3.41.11"
+ARG CCU_VERSION="3.49.17"
 
 #CCU Serial Number
 ARG CCU_SERIAL="ccu_docker"
@@ -9,7 +9,8 @@ ARG CCU_SERIAL="ccu_docker"
 #QEMU version (allows running build and CCU on x86)
 ARG QEMU_VERSION="v3.0.0"
 
-RUN export CCU_FW_LINK="http://update.homematic.com/firmware/download?cmd=download&version=${CCU_VERSION}&serial=${CCU_SERIAL}&lang=de&product=HM-CCU${CCU_VERSION%%.*}" \
+#RUN export CCU_FW_LINK="http://update.homematic.com/firmware/download?cmd=download&version=${CCU_VERSION}&serial=${CCU_SERIAL}&lang=de&product=HM-CCU${CCU_VERSION%%.*}" \
+RUN export CCU_FW_LINK="https://www.eq-3.de/downloads/software/firmware/ccu3-firmware/ccu3-${CCU_VERSION}.tgz" \
     && echo "Downloading from $CCU_FW_LINK " \
     && wget --no-verbose $CCU_FW_LINK -O -|tar -xzO rootfs.ext4.gz|gunzip>rootfs.ext4
 
@@ -38,7 +39,7 @@ RUN git clone --depth 1 --single-branch https://github.com/jens-maus/RaspberryMa
 RUN cd RaspberryMatic/buildroot-external/patches/occu/ && \
     mkdir /RaspberryMatic-occu-patches && \
     mv 0032-WebUI-Show-Gateway-DC.patch \
-       0038-WebUI-DeviceOverview-StatusColumn.patch \
+#       0038-WebUI-DeviceOverview-StatusColumn.patch \
        0057-WebUI-ImprovedDutyCycleDisplay.patch \
        /RaspberryMatic-occu-patches && \
        cd /extracted/ && \
@@ -54,7 +55,8 @@ COPY additions /additions
 RUN cp -av --remove-destination /additions/files/* /extracted/
 
 RUN cd extracted/ \
-    && cat /additions/patches/*|patch -p1
+#&& cat www/config/cp_maintenance.cgi \
+    && cat /additions/patches/*.patch|patch -p1
 
 
 FROM scratch
