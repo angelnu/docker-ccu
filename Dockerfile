@@ -1,7 +1,7 @@
 FROM python as builder
 
 #CCU firmware version to download
-ARG CCU_VERSION="3.49.17"
+ARG CCU_VERSION="3.53.30"
 
 #CCU Serial Number
 ARG CCU_SERIAL="NEQ1234567"
