@@ -1,3 +1,15 @@
+# MERGED into RaspberryMatic
+
+Since I loved the additional features added by @jens-maus in (RaspberryMatic)[https://github.com/jens-maus/RaspberryMatic] I had been ussing some of his work here. In order to get the "full thing" he and I have merged the functions in this repo: see  (RaspberryMatic)[https://github.com/jens-maus/RaspberryMatic/issues/786]. Features:
+- full RaspberryMatic experience, including backups, Dutty-Cycle, LAN GW and many more - see https://raspberrymatic.de/
+- support for x86_64/amd64, ARM and ARM64
+
+Migration:
+- follow instructions in the (RaspberryMatic Wiki)[https://github.com/jens-maus/RaspberryMatic/wiki/Docker]
+- your data will be preserved - if you used a different docker volume or container name you will need to adjust the settings when calling deploy.sh
+
+Therefore I do not longer plan to keep updating this repository. If you believe that there are resons for a vanilla official CCU as container please open an issue here. If I do not hear any requests in 1 month I will set this repo in read-only mode.
+
 # docker-ccu
 Homematic CCU firmware running as docker container on arm and (emulated) x86.
 
