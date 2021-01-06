@@ -1,7 +1,7 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 #Load settings
-if [ -e settings ]; then
+if [[ -e settings ]]; then
   . ./settings
 else
   . ./settings.template
@@ -17,7 +17,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # For CCU2 the ccu2 branch must be used
-if [ $MAYOR_CCU_VERSION -le 2 ]; then
+if [[ $MAYOR_CCU_VERSION -le 2 ]]; then
   echo "ERROR: CCU_VERSION must be newer than 2 - please use the 'ccu2' git branch for the CCU2 firmware."
   exit 1
 fi
