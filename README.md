@@ -1,4 +1,4 @@
-# MERGED into RaspberryMatic
+# DEPRECATION NOTE - merged into RaspberryMatic
 
 Since I loved the additional features added by @jens-maus in (RaspberryMatic)[https://github.com/jens-maus/RaspberryMatic] I had been ussing some of his work here. In order to get the "full thing" he and I have merged the functions in this repo: see  (RaspberryMatic)[https://github.com/jens-maus/RaspberryMatic/issues/786]. Features:
 - full RaspberryMatic experience, including backups, Dutty-Cycle, LAN GW and many more - see https://raspberrymatic.de/
